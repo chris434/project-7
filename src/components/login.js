@@ -1,0 +1,54 @@
+import { useState } from "react";
+
+function Login() {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+
+  const onchange = (e) => {
+    const { value, name } = e.target;
+    setForm((state) => ({
+      ...state,
+      [name]: value,
+    }));
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const { email, password } = form;
+    if (email === "" || password === "") {
+      setError("email and password required");
+    }
+  };
+
+  return (
+    <div>
+      <section className="login-container">
+        <div className="login">
+          <h1>
+            <b>Login to Groupomania</b>
+          </h1>
+          <form onSubmit={onSubmit}>
+            <input
+              name="email"
+              value={form.email}
+              onChange={onchange}
+              type="email"
+              placeholder="email"
+            />
+            <input
+              name="password"
+              value={form.password}
+              onChange={onchange}
+              type="password"
+              placeholder="password"
+            />
+            <p className="error">{error}</p>
+            <button className="login-button">Login</button>
+          </form>
+          <small>or</small>
+          <button>sign up</button>
+        </div>
+      </section>
+    </div>
+  );
+}
+export default Login;
