@@ -4,7 +4,7 @@
 
 main {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 header {
@@ -46,10 +46,42 @@ h1 {
     font-size: 2rem;
 }
 
-small {
+.question {
+    font-size: 1.5rem;
+}
+
+.or-style {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.required {
+    color: red;
+    font-size: 2rem;
+    margin-right: 2%;
+}
+
+.upload-image {
+    display: flex;
+    margin: 5%;
+    align-items: center;
+}
+
+.upload-image label {
+    background-color: rgb(74, 133, 16);
+    padding: 4%;
+    cursor: pointer;
+    height: 50%;
+    color: white;
+    margin-left: 5%;
+}
+
+.upload-image img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
 }
 
 p {
@@ -57,8 +89,8 @@ p {
     margin: 0;
 }
 
-small::before,
-small::after {
+.or-style::before,
+.or-style::after {
     content: "";
     width: 150px;
     height: 1px;
@@ -82,11 +114,12 @@ small::after {
 .error {
     margin-left: 10%;
     margin-right: 10%;
+    color: red;
+    font-size: 1rem;
 }
 
 button {
-    width: 60%;
-    font-size: 30px;
+    font-size: 2rem;
     margin: 5% 20% 5% 20%;
     background-color: rgb(74, 133, 16);
     color: white;
@@ -109,6 +142,41 @@ button:hover {
     width: 50%;
 }
 
+.password-requirement-container ul li {
+    margin: 5% 0 5% 0;
+    font-size: 1.2rem;
+    list-style: none;
+    width: 100%;
+    padding: 0;
+}
+
+ul {
+    padding: 0;
+}
+
+.signup-container {
+    font-size: 1rem;
+    background-color: white;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 5%;
+    align-items: center;
+}
+
+.signup-container input {
+    margin-top: 5%;
+    font-size: 1.5rem;
+    width: 90%;
+}
+
+@media (max-width: 930px) {
+    .signup-container {
+        width: 50%;
+    }
+}
+
 @media (max-width: 700px) {
     .title-image {
         width: 80%;
@@ -120,7 +188,25 @@ button:hover {
     main {
         display: block;
     }
-    .welcome {
+    .signup-container input {
+        width: 60%;
+        margin-top: 10%;
+    }
+    .welcome,
+    .signup-container {
         width: 100%;
+    }
+    h1,
+    .question {
+        font-size: 1rem;
+    }
+    button {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .password-requirement-container ul li {
+        font-size: 0.8rem;
     }
 }

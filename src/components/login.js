@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const history = useHistory();
 
   const onchange = (e) => {
     const { value, name } = e.target;
@@ -17,6 +19,9 @@ function Login() {
     if (email === "" || password === "") {
       setError("email and password required");
     }
+  };
+  const singUp = () => {
+    history.push("/signup");
   };
 
   return (
@@ -44,8 +49,8 @@ function Login() {
             <p className="error">{error}</p>
             <button className="login-button">Login</button>
           </form>
-          <small>or</small>
-          <button>sign up</button>
+          <small className="or-style">or</small>
+          <button onClick={singUp}>sign up</button>
         </div>
       </section>
     </div>
