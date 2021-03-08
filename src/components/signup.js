@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import titleImage from "../images/icon-left-font-monochrome-black.svg";
-import profileImage from "../images/blank-profile.png";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
 function SignUp() {
@@ -12,7 +11,7 @@ function SignUp() {
     case2: { color: "red", icon: <FaTimes /> },
     case3: { color: "red", icon: <FaTimes /> },
   });
-  const [currentPassword, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [data, setData] = useState({
     first_name: "",
     last_name: "",
@@ -24,7 +23,6 @@ function SignUp() {
     last_name: "",
     email: "",
   });
-  const [image, setImage] = useState(profileImage);
 
   const states = [
     ["green", <FaCheck />],
@@ -57,6 +55,27 @@ function SignUp() {
       [name]: value,
     }));
   };
+  const postData = async () => {
+    const form = { ...data, password };
+    console.log(form);
+    try {
+      const response = await fetch("http://localhost:5000/backend/signup", {
+        method: "post",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await response.json();
+      if (result.error === "email") {
+        setError((state) => ({
+          ...state,
+          email: result.details,
+        }));
+      }
+    } catch {
+      console.log("unable to create user");
+    }
+  };
   const ValidateData = (e) => {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     const passwordRegx = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
@@ -79,14 +98,12 @@ function SignUp() {
       }));
     });
 
-    if (!passwordRegx.test(currentPassword) || !isValid) {
+    if (!passwordRegx.test(password) || !isValid) {
       return window.scrollTo(0, 0);
     }
+    postData();
   };
 
-  const changeImage = (e) => {
-    setImage(URL.createObjectURL(e.target.files[0]));
-  };
   return (
     <div>
       <main>
@@ -161,19 +178,6 @@ function SignUp() {
               </ul>
             </section>
             <hr />
-            <div className="upload-image">
-              <img src={image} alt="" />
-              <label htmlFor="file-input">add image</label>
-              <input
-                onChange={changeImage}
-                id="file-input"
-                type="file"
-                accept="image/*"
-                size="500"
-                hidden
-              />
-            </div>
-
             <button>create account</button>
           </form>
         </div>
