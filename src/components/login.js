@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import login from "./loginFuction";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -13,11 +14,19 @@ function Login() {
       [name]: value,
     }));
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = form;
     if (email === "" || password === "") {
-      setError("email and password required");
+      return setError("email and password required");
+    }
+
+    const response = await login(email, password);
+
+    if (response && response.status === 200) {
+      return history.push("/forum");
+    } else if (response) {
+      setError(response.data);
     }
   };
   const singUp = () => {

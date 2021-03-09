@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { axios } from "./axios";
 
 import titleImage from "../images/icon-left-font-monochrome-black.svg";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import login from "./loginFuction";
 
 function SignUp() {
   const [state, setState] = useState({
@@ -23,7 +25,7 @@ function SignUp() {
     last_name: "",
     email: "",
   });
-
+  const history = useHistory();
   const states = [
     ["green", <FaCheck />],
     ["red", <FaTimes />],
@@ -57,20 +59,19 @@ function SignUp() {
   };
   const postData = async () => {
     const form = { ...data, password };
-    console.log(form);
     try {
-      const response = await fetch("http://localhost:5000/backend/signup", {
-        method: "post",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const result = await response.json();
-      if (result.error === "email") {
+      const response = await axios.post("/backend/signup", form);
+      if (response.data.error === "email") {
         setError((state) => ({
           ...state,
-          email: result.details,
+          email: response.data.details,
         }));
+      }
+
+      const loginResponse = await login(form.email, form.password);
+
+      if (loginResponse.status === 200) {
+        history.push("/forum");
       }
     } catch {
       console.log("unable to create user");
