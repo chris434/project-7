@@ -4,7 +4,7 @@ import login from "./loginFuction";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
+  const [error, setError] = useState();
   const history = useHistory();
 
   const onchange = (e) => {
@@ -16,17 +16,18 @@ function Login() {
   };
   const onSubmit = async (e) => {
     e.preventDefault();
+    console.log("sub");
     const { email, password } = form;
     if (email === "" || password === "") {
       return setError("email and password required");
     }
 
     const response = await login(email, password);
-
+    console.log(response);
     if (response && response.status === 200) {
       return history.push("/forum");
     } else if (response) {
-      setError(response.data);
+      setError(response.data.error);
     }
   };
   const singUp = () => {

@@ -1,9 +1,10 @@
 import { useHistory } from "react-router-dom";
+import Cookies from "universal-cookie";
 function Forum() {
   const history = useHistory();
   const logout = () => {
-    const header = new Headers();
-    header.delete("Authorization");
+    const cookie = new Cookies();
+    cookie.remove("Authorization");
     history.push("/");
   };
   return (

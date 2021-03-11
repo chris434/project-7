@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const env = require('dotenv')
 const authRoutes = require('./routes/auth-routes')
+const postRoutes = require('./routes/post-routes')
 const app = express()
 
 const port = process.env.PORT || 5000
@@ -12,7 +13,9 @@ app.use(cors({
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200
 }))
+app.use('/backend', postRoutes)
 app.use('/backend', authRoutes)
+
 
 
 app.listen(port, () => {

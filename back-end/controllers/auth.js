@@ -28,14 +28,14 @@ exports.login = async(req, res) => {
         const user = await pool.query(lookUpUser)
         console.log(user.rows[0].user_id)
         const correctPassword = await bcrypt.compare(password, user.rows[0].user_password)
-        if (!correctPassword) return res.status(202).json('email or password incorrect')
+        if (!correctPassword) return res.status(202).json({ error: 'email or password incorrect' })
         const token = jwt.sign({ userId: user.user_id }, process.env.SECRET_TOKEN, { expiresIn: '24h' })
         res.status(200).json({
             userId: user.rows[0].user_id,
             token: token
         })
     } catch (e) {
-        console.log(e)
+        return res.status(202).json({ error: 'email or password incorrect' })
     }
 
 }

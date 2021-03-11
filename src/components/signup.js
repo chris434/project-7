@@ -62,16 +62,15 @@ function SignUp() {
     try {
       const response = await axios.post("/backend/signup", form);
       if (response.data.error === "email") {
-        setError((state) => ({
+        return setError((state) => ({
           ...state,
           email: response.data.details,
         }));
       }
 
-      const loginResponse = await login(form.email, form.password);
-
-      if (loginResponse.status === 200) {
-        history.push("/forum");
+      const loggedIn = await login(data.email, password);
+      if (loggedIn.status === 200) {
+        return history.push("/forum");
       }
     } catch {
       console.log("unable to create user");
