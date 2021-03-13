@@ -7,8 +7,75 @@ main {
     justify-content: center;
 }
 
+.profile-dropdown-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.profile-dropdown {
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.profile-dropdown li {
+    font-size: 1.5rem;
+    padding: 5% 1% 5% 1%;
+    cursor: pointer;
+}
+
+.create-post-button {
+    border-radius: 50px;
+    border: rgb(74, 133, 16) 5px solid;
+    background-color: rgb(74, 133, 16);
+    color: white;
+    font: 1.2rem sans-serif;
+    font-weight: bold;
+    margin: 2%;
+    padding: 2%;
+}
+
+.create-post-button:hover {
+    background-color: transparent;
+    color: black;
+}
+
+.profile-dropdown svg {
+    margin-right: 10px;
+}
+
+.profile-image {
+    width: 10%;
+    clip-path: circle();
+    cursor: pointer;
+}
+
+.logo {
+    width: 30%;
+}
+
+.profile-dropdown ul {
+    border: black 1px solid;
+    border-top: 0;
+    padding: 2%;
+    width: auto;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+}
+
+ul li {
+    list-style: none;
+    width: 100%;
+}
+
 header {
-    background-color: rgb(91, 205, 243);
+    background-color: #83a1e4;
+    padding: 2%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .login-container {
@@ -60,28 +127,6 @@ h1 {
     color: red;
     font-size: 2rem;
     margin-right: 2%;
-}
-
-.upload-image {
-    display: flex;
-    margin: 5%;
-    align-items: center;
-}
-
-.upload-image label {
-    background-color: rgb(74, 133, 16);
-    padding: 4%;
-    cursor: pointer;
-    height: 50%;
-    color: white;
-    margin-left: 5%;
-}
-
-.upload-image img {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
 }
 
 p {
@@ -147,7 +192,7 @@ button:hover {
     font-size: 1.2rem;
     list-style: none;
     width: 100%;
-    padding: 0;
+    padding: 0 3% 03%;
 }
 
 ul {
@@ -181,6 +226,12 @@ ul {
     .title-image {
         width: 80%;
     }
+    .logo {
+        width: 60%;
+    }
+    .profile-image {
+        width: 20%;
+    }
     .login {
         width: 100%;
         box-shadow: none;
@@ -202,6 +253,18 @@ ul {
     }
     button {
         font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .profile-dropdown ul {
+        border: 0;
+        border-bottom: 1px black solid;
+        position: unset;
+        width: 100%;
+    }
+    .profile-dropdown ul li {
+        padding: 2%;
     }
 }
 

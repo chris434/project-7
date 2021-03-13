@@ -25,7 +25,7 @@ function App() {
       console.log(response);
       if (response.status === 200) {
         console.log("jk");
-        return true;
+        return { data: response.data, status: true };
       } else {
         return false;
       }
@@ -34,17 +34,21 @@ function App() {
 
   function SecureRoute(props) {
     const [isLoggedIN, setLogin] = useState({ status: false });
+    const [info, setData] = useState();
     useEffect(() => {
-      checkLogin().then(setLogin);
-    }, []);
+      checkLogin().then((res) => {
+        setData(res.data);
+        setLogin(res.status);
+      });
+    }, [isLoggedIN]);
 
     return (
       <Route
         path={props.path}
         render={(data) => {
-          console.log(isLoggedIN);
+          console.log(info);
           if (isLoggedIN) {
-            return <props.component {...data}></props.component>;
+            return <props.component {...info}></props.component>;
           } else {
             return <Redirect to={{ pathname: "/" }}></Redirect>;
           }

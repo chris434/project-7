@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -13,6 +14,8 @@ app.use(cors({
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200
 }))
+app.use('/default_images', express.static(path.join(__dirname, 'default_images')))
+
 app.use('/backend', postRoutes)
 app.use('/backend', authRoutes)
 
