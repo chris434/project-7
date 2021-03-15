@@ -1,6 +1,6 @@
 import Axios from 'axios'
 
-export const axios = Axios.create({
+export default Axios.create({
     baseURL: 'http://localhost:5000',
     timeout: 3000
 })

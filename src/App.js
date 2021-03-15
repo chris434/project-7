@@ -9,15 +9,17 @@ import { useState, useEffect } from "react";
 import Home from "./components/home";
 import SignUP from "./components/signup";
 import Forum from "./components/forum";
-import { axios } from "./components/axios";
+import axios from "./components/axios";
 import Cookies from "universal-cookie";
+import CreatePost from "./components/create-post";
 
 function App() {
+  let endpoint;
   async function checkLogin() {
     try {
       const cookie = new Cookies();
-      console.log("j");
-      const response = await axios.get(`/backend/forum`, {
+
+      const response = await axios.get(`/backend/${endpoint}`, {
         headers: {
           Authorization: cookie.get("Authorization"),
         },
@@ -31,10 +33,14 @@ function App() {
       }
     } catch {}
   }
-
   function SecureRoute(props) {
-    const [isLoggedIN, setLogin] = useState({ status: false });
+    console.log(props);
+    const [isLoggedIN, setLogin] = useState({
+      status: false,
+    });
+    console.log(isLoggedIN);
     const [info, setData] = useState();
+
     useEffect(() => {
       checkLogin().then((res) => {
         setData(res.data);
@@ -44,11 +50,18 @@ function App() {
 
     return (
       <Route
+        exact
         path={props.path}
         render={(data) => {
-          console.log(info);
+          endpoint = props.endpoint;
+
           if (isLoggedIN) {
-            return <props.component {...info}></props.component>;
+            console.log(info);
+            return (
+              <div>
+                <props.component {...info}></props.component>;
+              </div>
+            );
           } else {
             return <Redirect to={{ pathname: "/" }}></Redirect>;
           }
@@ -62,7 +75,15 @@ function App() {
         <Switch>
           <Route exact path={"/"} component={Home} />
           <Route exact path={"/signup"} component={SignUP} />
-          <SecureRoute path={"/forum"} component={Forum}></SecureRoute>
+          <SecureRoute
+            endpoint={"/forum"}
+            path={"/forum"}
+            component={Forum}></SecureRoute>
+
+          <SecureRoute
+            endpoint={"/authenticate"}
+            path={"/createpost"}
+            component={CreatePost}></SecureRoute>
         </Switch>
       </div>
     </Router>

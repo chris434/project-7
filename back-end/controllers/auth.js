@@ -7,7 +7,7 @@ require('dotenv').config()
 
 exports.signUp = async(req, res) => {
     const { first_name, last_name, email, password } = req.body
-    const profile_image = fs.readFileSync('./default_images/Bill_TV-min.jpg', 'base64')
+    const profile_image = fs.readFileSync('./default_images/blank-profile.png', 'base64')
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -41,5 +41,14 @@ exports.login = async(req, res) => {
     } catch (e) {
         return res.status(202).json({ error: 'email or password incorrect' })
     }
+}
+exports.authenticate = async(req, res) => {
+    try {
+        console.log('k')
+        const user = await pool.query(`SELECT * FROM users WHERE user_id = ${req.id}`)
+        const data = user.rows[0]
+        return res.status(200).json({ image: data.profile_image, firstName: data.first_name, lastName: data.last_name })
+    } catch (e) {
 
+    }
 }

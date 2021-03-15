@@ -3,14 +3,16 @@ import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import titleLogo from "../images/icon-left-font-monochrome-black.svg";
 import { base64StringToBlob } from "blob-util";
-import { FaUser, FaCog, FaPowerOff, FaPlus } from "react-icons/fa";
+import { FaUser, FaCog, FaPowerOff } from "react-icons/fa";
 
 function Navbar(props) {
+  console.log(props);
   const [open, setToggle] = useState("none");
   const dropDownRef = useRef();
   const profileImageRef = useRef();
   const history = useHistory();
   let url;
+  console.log(props);
 
   if (props.data.image) {
     const blob = base64StringToBlob(props.data.image, "image/png");
@@ -60,23 +62,19 @@ function Navbar(props) {
             <li>
               <FaUser />
               {`${props.data.firstName} ${props.data.lastName}`}
-              <hr />
             </li>
+            <hr />
             <li>
               <FaCog />
               your account
-              <hr />
             </li>
+            <hr />
             <li onClick={logout}>
               <FaPowerOff />
               log out
             </li>
           </ul>
         </section>
-        <button className="create-post-button">
-          <FaPlus className="plus-icon" />
-          create post
-        </button>
       </div>
     </div>
   );

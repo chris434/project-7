@@ -7,6 +7,19 @@ main {
     justify-content: center;
 }
 
+.create-post-container {
+    width: 50%;
+    background-color: white;
+    padding: 5%;
+}
+
+.post-textArea {
+    resize: none;
+    height: 30vh;
+    width: 100%;
+    font-size: 2rem;
+}
+
 .profile-dropdown-container {
     display: flex;
     justify-content: flex-end;
@@ -31,7 +44,7 @@ main {
     color: white;
     font: 1.2rem sans-serif;
     font-weight: bold;
-    margin: 2%;
+    margin: 5% 0 5% 3%;
     padding: 2%;
 }
 
@@ -45,25 +58,26 @@ main {
 }
 
 .profile-image {
-    width: 10%;
+    width: 5%;
     clip-path: circle();
     cursor: pointer;
 }
 
 .logo {
-    width: 30%;
+    width: 20%;
 }
 
 .profile-dropdown ul {
     border: black 1px solid;
-    border-top: 0;
     padding: 2%;
     width: auto;
     margin: 0;
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 100;
+    z-index: 27;
+    box-shadow: gray 0px 20px 6px 7px;
+    background-color: whitesmoke;
 }
 
 ul li {
@@ -72,10 +86,13 @@ ul li {
 }
 
 header {
-    background-color: #83a1e4;
+    background-color: whitesmoke;
     padding: 2%;
     display: flex;
     justify-content: space-between;
+    box-shadow: gray 0px 20px;
+    margin: 0;
+    z-index: 1;
 }
 
 .login-container {
@@ -160,7 +177,7 @@ p {
     margin-left: 10%;
     margin-right: 10%;
     color: red;
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 
 button {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { axios } from "./axios";
+import axios from "./axios";
 
 import titleImage from "../images/icon-left-font-monochrome-black.svg";
 import { FaCheck, FaTimes } from "react-icons/fa";
