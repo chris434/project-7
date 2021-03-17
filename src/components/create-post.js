@@ -39,7 +39,9 @@ function CreatePost(props) {
 
   return (
     <div>
-      <Navbar data={props} />
+      <div className="nav-bar">
+        <Navbar {...props} />
+      </div>
 
       <main style={{ flexDirection: "column", alignItems: "center" }}>
         <h1>create a post</h1>

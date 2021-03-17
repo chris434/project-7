@@ -12,6 +12,6 @@ module.exports = async(req, res, next) => {
         req.id = decodedToken.id
         next()
     } catch (e) {
-        res.status(202).json(e)
+        res.status(400).json(e)
     }
 }

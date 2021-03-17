@@ -14,8 +14,8 @@ function Navbar(props) {
   let url;
   console.log(props);
 
-  if (props.data.image) {
-    const blob = base64StringToBlob(props.data.image, "image/png");
+  if (props.profile_image) {
+    const blob = base64StringToBlob(props.profile_image, "image/png");
     url = URL.createObjectURL(blob);
   }
   const keyDown = (e) => {
@@ -61,7 +61,7 @@ function Navbar(props) {
           <ul ref={dropDownRef} style={{ display: open }}>
             <li>
               <FaUser />
-              {`${props.data.firstName} ${props.data.lastName}`}
+              {`${props.first_name} ${props.last_name}`}
             </li>
             <hr />
             <li>

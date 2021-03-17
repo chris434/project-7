@@ -1,15 +1,26 @@
 const pool = require('../db/db.config')
-const fs = require('fs')
+const dateConverter = require('../utils/date-converter')
 
 
 exports.getPosts = async(req, res) => {
     try {
-        console.log('k')
-        const user = await pool.query(`SELECT * FROM users WHERE user_id = ${req.id}`)
-        const data = user.rows[0]
-        return res.status(200).json({ image: data.profile_image, firstName: data.first_name, lastName: data.last_name })
-    } catch (e) {
+        let posts = await pool.query("SELECT post_id, post_content, posts.created_date, first_name, last_name,profile_image FROM posts JOIN users ON (posts.user_id = users.user_id) ORDER BY posts.created_date DESC")
+        const hasRead = await pool.query(`SELECT post_id FROM user_read WHERE user_id =${req.id}`)
 
+        const mappedPosts = posts.rows.map(row => {
+            let read
+            if (hasRead.rowCount === 0) {
+                read = 'unread'
+            }
+            console.log(dateConverter(row.created_date))
+            row.created_date = dateConverter(row.created_date)
+            return {...row, read: read }
+
+        })
+        console.log('ff')
+        return res.status(200).json(mappedPosts)
+    } catch (e) {
+        console.log(e)
     }
 }
 exports.createPost = async(req, res) => {

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "./axios";
+import Cookies from "universal-cookie";
+
 import login from "./loginFuction";
 
 function Login() {
@@ -21,10 +24,17 @@ function Login() {
     if (email === "" || password === "") {
       return setError("email and password required");
     }
-
-    const response = await login(email, password);
-    console.log(response);
+    console.log("k");
+    const response = await axios.post("/backend/login", {
+      email: email,
+      password: password,
+    });
+    console.log("j");
+    const cookie = new Cookies();
+    cookie.set("Authorization", `bearer ${response.data.token}`);
+    console.log(cookie.get("Authorization"));
     if (response && response.status === 200) {
+      console.log(cookie.get("Authorization"));
       return history.push("/forum");
     } else if (response) {
       setError(response.data.error);
