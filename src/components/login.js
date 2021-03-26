@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "./axios";
 import Cookies from "universal-cookie";
+import Button from "./styled-button";
 
 import login from "./loginFuction";
 
@@ -51,7 +52,7 @@ function Login() {
           <h1>
             <b>Login to Groupomania</b>
           </h1>
-          <form onSubmit={onSubmit}>
+          <form>
             <input
               name="email"
               value={form.email}
@@ -67,10 +68,16 @@ function Login() {
               placeholder="password"
             />
             <p className="error">{error}</p>
-            <button className="login-button">Login</button>
+            <Button
+              onClick={onSubmit}
+              color={"blue"}
+              hover={"rgb(16, 16, 207)"}
+              className="login-button">
+              Login
+            </Button>
           </form>
           <small className="or-style">or</small>
-          <button onClick={singUp}>sign up</button>
+          <Button onClick={singUp}>sign up</Button>
         </div>
       </section>
     </div>

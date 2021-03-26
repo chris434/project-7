@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "./axios";
-
 import titleImage from "../images/icon-left-font-monochrome-black.svg";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import login from "./loginFuction";
+import Button from "./styled-button";
 
 function SignUp() {
   const [state, setState] = useState({
@@ -113,7 +113,7 @@ function SignUp() {
           <small className="question">
             already have an account? <Link to="/">go to login</Link>
           </small>
-          <form onSubmit={ValidateData}>
+          <form>
             <div>
               <small className="required">* </small>
               <input
@@ -178,7 +178,7 @@ function SignUp() {
               </ul>
             </section>
             <hr />
-            <button>create account</button>
+            <Button onClick={ValidateData}>create account</Button>
           </form>
         </div>
       </main>

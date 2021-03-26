@@ -9,25 +9,24 @@ import { useState, useEffect } from "react";
 import Home from "./components/home";
 import SignUP from "./components/signup";
 import Forum from "./components/forum";
+import NavBar from "./components/navbar";
+import PostViewer from "./components/post-viewer";
 import axios from "./components/axios";
 import Axios from "axios";
 import Cookies from "universal-cookie";
 import CreatePost from "./components/create-post";
 
 function App() {
-  let endpoint;
+  let endpoint = false;
 
   function SecureRoute(props) {
     const [isLoggedIN, setLogin] = useState(true);
-    console.log(props);
-    console.log(isLoggedIN);
-    const [info, setData] = useState();
-
+    const [info, setData] = useState([]);
     useEffect(() => {
       let sauce = Axios.CancelToken.source();
       console.log(true);
       const getUser = async () => {
-        console.log("ko");
+        console.log("kobbb");
         try {
           const cookie = new Cookies();
           console.log(cookie.get("Authorization"));
@@ -51,16 +50,28 @@ function App() {
       getUser();
       return () => {};
     }, []);
-
     return (
       <Route
         exact
         path={props.path}
         render={(data) => {
-          endpoint = props.endpoint;
+          endpoint = props.endpoint || false;
+          console.log(endpoint);
+          if (props.computedMatch.params.id) {
+            endpoint = `${props.endpoint}/${props.computedMatch.params.id}`;
+          }
+          console.log("jnnn");
 
           if (isLoggedIN === true) {
-            return <props.component {...info}></props.component>;
+            console.log(info);
+            return (
+              <div>
+                <NavBar {...info}></NavBar>
+                <main>
+                  <props.component></props.component>
+                </main>
+              </div>
+            );
           } else {
             return <Redirect to={{ pathname: "/" }}></Redirect>;
           }
@@ -75,13 +86,21 @@ function App() {
           <Route exact path={"/"} component={Home} />
           <Route exact path={"/signup"} component={SignUP} />
           <SecureRoute
-            endpoint={"/authenticate"}
+            endpoint={"/posts"}
             path={"/forum"}
             component={Forum}></SecureRoute>
-
+          <SecureRoute
+            exact
+            endpoint={"/post"}
+            path={"/post/:id"}
+            component={PostViewer}></SecureRoute>
           <SecureRoute
             endpoint={"/authenticate"}
             path={"/createpost"}
+            component={CreatePost}></SecureRoute>
+          <SecureRoute
+            endpoint={"/authenticate"}
+            path={"/post/:id"}
             component={CreatePost}></SecureRoute>
         </Switch>
       </div>
