@@ -27,7 +27,7 @@ function PostHeader(props) {
       ) : null}
       <img
         className="profile-image"
-        src={props.url}
+        src={props.profile_image}
         alt={props.first_name + " " + props.last_name}
       />
       <small style={{ fontSize: "1.5rem" }}>

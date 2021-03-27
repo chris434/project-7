@@ -3,7 +3,7 @@ import axios from "./axios";
 import Cookies from "universal-cookie";
 import { useHistory } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const PostsContainer = styled.div`

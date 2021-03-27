@@ -7,12 +7,12 @@ require('dotenv').config()
 
 exports.signUp = async(req, res) => {
     const { first_name, last_name, email, password } = req.body
-    const profile_image = fs.readFileSync('./default_images/blank-profile.png', 'base64')
+    const profileImage = 'http://localhost:5000/default_images/blank-profile.png'
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        const createUser = `INSERT INTO users (first_name,last_name,email,user_password,profile_image) values('${first_name}','${last_name}','${email}','${hashedPassword}','${profile_image}')`
+        const createUser = `INSERT INTO users (first_name,last_name,email,user_password,profile_image) values('${first_name}','${last_name}','${email}','${hashedPassword}','${profileImage}')`
         await pool.query(createUser)
         return res.status(200).json('user created')
     } catch (e) {

@@ -14,10 +14,6 @@ function Navbar(props) {
   let url;
   console.log(props);
 
-  if (props.profile_image) {
-    const blob = base64StringToBlob(props.profile_image, "image/png");
-    url = URL.createObjectURL(blob);
-  }
   const keyDown = (e) => {
     if (
       !dropDownRef.current.contains(e.target) &&
@@ -51,7 +47,7 @@ function Navbar(props) {
         <img
           ref={profileImageRef}
           className="profile-image"
-          src={url}
+          src={props.profile_image}
           alt=""
           onClick={dropDownState}
         />

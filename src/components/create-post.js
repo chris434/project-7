@@ -47,7 +47,7 @@ function CreatePost(props) {
   };
 
   return (
-    <>
+    <div className="flex-container">
       <h1 style={{ marginTop: "3%" }}>create a post</h1>
       <CreatePostContainer>
         <div>
@@ -72,7 +72,7 @@ function CreatePost(props) {
           create post
         </Button>
       </CreatePostContainer>
-    </>
+    </div>
   );
 }
 export default CreatePost;

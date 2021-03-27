@@ -35,16 +35,12 @@ function Posts(props) {
   const { isRead, setRead } = useState(true);
   console.log(props);
   let url;
-  if (props.profile_image) {
-    const blob = base64StringToBlob(props.profile_image, "image/png");
-    url = URL.createObjectURL(blob);
-  }
 
   const data = { ...props, url };
 
   return (
     <Post {...props.style}>
-      <PostHeader {...data}> </PostHeader> <hr style={{ margin: 0 }} />
+      <PostHeader {...props}> </PostHeader> <hr style={{ margin: 0 }} />
       <Read read={isRead}>
         <b>
           <small>
