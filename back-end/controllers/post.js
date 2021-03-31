@@ -8,13 +8,16 @@ exports.getPosts = async(req, res) => {
         const hasRead = await pool.query(`SELECT post_id FROM user_read WHERE user_id =${req.id}`)
 
         const mappedPosts = posts.rows.map(row => {
-            let read
-            if (hasRead.rowCount === 0) {
-                read = 'unread'
-            }
+            let read = false
+
+            hasRead.rows.forEach(readRow => {
+                if (row.post_id === readRow.post_id) {
+                    return read = true
+                }
+            })
             console.log(dateConverter(row.created_date))
             row.created_date = dateConverter(row.created_date)
-            return {...row, read: read }
+            return {...row, read }
 
         })
         console.log('jj')
@@ -43,8 +46,11 @@ exports.createPost = async(req, res) => {
 exports.getPost = async(req, res) => {
     try {
         const id = req.params.id
+        const user_id = req.id
         console.log(id)
         const post = await pool.query(`SELECT post_id, post_content,image_url, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
+
+        await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES(${user_id},${id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
         console.log(post.rows[0].created_date)
         post.rows[0].created_date = dateConverter(post.rows[0].created_date)
         res.json(post.rows[0])

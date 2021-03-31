@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import titleLogo from "../images/icon-left-font-monochrome-black.svg";
-import { base64StringToBlob } from "blob-util";
 import { FaUser, FaCog, FaPowerOff } from "react-icons/fa";
 
 function Navbar(props) {
@@ -11,7 +10,6 @@ function Navbar(props) {
   const dropDownRef = useRef();
   const profileImageRef = useRef();
   const history = useHistory();
-  let url;
   console.log(props);
 
   const keyDown = (e) => {

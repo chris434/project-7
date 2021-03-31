@@ -31,7 +31,7 @@ function PostViewer() {
   console.log("jii");
   return (
     <div className="flex-container">
-      <Post {...data} />
+      <Post read={true} {...data} />
     </div>
   );
 }

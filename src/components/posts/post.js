@@ -1,6 +1,6 @@
 import { FaBookmark } from "react-icons/fa";
 import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import PostHeader from "../posts/post-header";
 import MainFooter from "../posts/all-post-footer";
@@ -20,11 +20,14 @@ const Post = styled.section`
 
 const Read = styled.div`
   font-size: 1.5rem;
+
   color: ${(props) => (props.read ? "green" : "red")};
+
   margin: 1rem 0 0 1rem;
 `;
 const PostContent = styled.div`
   font-size: 2rem;
+  cursor: pointer;
 
   height: ${(props) => props.height || "auto"};
 
@@ -48,23 +51,25 @@ function Posts(props) {
   const postContent = useRef();
   const param = useParams();
   console.log(param);
-  const { isRead, setRead } = useState(true);
+  const history = useHistory();
   console.log(props);
-  let url;
 
-  const data = { ...props, url };
+  const singlePost = () => {
+    history.push(`/post/${props.post_id}`);
+  };
 
   return (
     <Post {...props.style}>
       <PostHeader {...props}> </PostHeader> <hr style={{ margin: 0 }} />
-      <Read read={isRead}>
+      <Read read={props.read}>
         <b>
           <small>
-            <FaBookmark /> {props.read}
+            <FaBookmark /> {props.read ? "read" : "unread"}
           </small>
         </b>
       </Read>
       <PostContent
+        onClick={singlePost}
         height={props.style.height}
         ref={postContent}
         id={props.post_id}>
@@ -73,7 +78,7 @@ function Posts(props) {
             <img src={props.image_url} alt="" />
           </ImageContainer>
         ) : (
-          <article> {props.post_content} </article>
+          <article>{props.post_content}</article>
         )}
       </PostContent>
       {!props.page ? <MainFooter /> : <SingleFooter id={props.post_id} />}
