@@ -4,7 +4,7 @@ const dateConverter = require('../utils/date-converter')
 
 exports.getPosts = async(req, res) => {
     try {
-        let posts = await pool.query("SELECT post_id, post_content, posts.created_date, first_name, last_name,profile_image FROM posts JOIN users ON (posts.user_id = users.user_id) ORDER BY posts.created_date DESC")
+        let posts = await pool.query("SELECT post_id, post_content,image_url, posts.created_date, first_name, last_name,profile_image FROM posts JOIN users ON (posts.user_id = users.user_id) ORDER BY posts.created_date DESC")
         const hasRead = await pool.query(`SELECT post_id FROM user_read WHERE user_id =${req.id}`)
 
         const mappedPosts = posts.rows.map(row => {
@@ -24,11 +24,15 @@ exports.getPosts = async(req, res) => {
     }
 }
 exports.createPost = async(req, res) => {
-    const content = req.body.data
+    const content = req.file || req.body.value
+    const field = req.body.field
     const userId = req.id
 
+
+
     try {
-        await pool.query(`INSERT INTO posts (post_content,user_id) values('${content}',${userId})`)
+        console.log(field)
+        await pool.query(`INSERT INTO posts (${field},user_id) values('${content}',${userId})`)
         return res.status(200).json('post successful')
 
     } catch (e) {
@@ -40,7 +44,7 @@ exports.getPost = async(req, res) => {
     try {
         const id = req.params.id
         console.log(id)
-        const post = await pool.query(`SELECT post_id, post_content, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
+        const post = await pool.query(`SELECT post_id, post_content,image_url, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
         console.log(post.rows[0].created_date)
         post.rows[0].created_date = dateConverter(post.rows[0].created_date)
         res.json(post.rows[0])

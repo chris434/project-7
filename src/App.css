@@ -14,6 +14,10 @@
     margin: 1rem 0 0 1rem;
 }
 
+main {
+    margin-top: 2rem;
+}
+
 .flex-container {
     display: flex;
     justify-content: center;

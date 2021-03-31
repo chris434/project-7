@@ -26,9 +26,13 @@ function PostViewer() {
     };
     getPosts();
   }, []);
-  const style = { marginTop: "5rem", height: "20vh", width: "60%" };
+  const style = { marginTop: "5rem", width: "60%" };
   const data = { ...post, page: true, style };
   console.log("jii");
-  return <Post {...data} />;
+  return (
+    <div className="flex-container">
+      <Post {...data} />
+    </div>
+  );
 }
 export default PostViewer;

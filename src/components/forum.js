@@ -8,6 +8,10 @@ import styled from "styled-components";
 
 const PostsContainer = styled.div`
   padding: 0 2rem 0% 2rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 const Button = styled.button`
   border-radius: 50px;
@@ -57,7 +61,7 @@ function Forum(props) {
       </Button>
       <PostsContainer>
         {posts.map((post) => {
-          const style = { marginTop: "0", height: "auto", width: "100%" };
+          const style = { marginTop: "0", height: "auto", width: "60%" };
           const data = { ...post, style };
           return <Post key={post.post_id} {...data}></Post>;
         })}

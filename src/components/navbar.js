@@ -44,6 +44,7 @@ function Navbar(props) {
     <div className="nav-bar-container">
       <header>
         <img className="logo" src={titleLogo} alt="" />
+
         <img
           ref={profileImageRef}
           className="profile-image"

@@ -1,76 +1,79 @@
-import axios from "./axios";
-import Cookies from "universal-cookie";
-import { useHistory } from "react-router-dom";
+import { FaPen, FaImage } from "react-icons/fa";
 import { useState } from "react";
 import styled from "styled-components";
-import Button from "./styled-button";
+import WrittenPost from "./wirrten-post";
+import MultiMedia from "./multi-media-post";
+
 const CreatePostContainer = styled.div`
   background-color: white;
-  padding: 3%;
+  padding-top: 0;
   width: 50%;
   @media (max-width: 700px) {
     width: 100%;
   }
 `;
+const Options = styled.section`
+  ul {
+    display: flex;
+    margin: 0;
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    font-size: 1.5rem;
+    padding: 1rem;
+
+    width: auto;
+    border-right: 1px black solid;
+  }
+  #post {
+    color: ${(props) => (props.toggle ? "blue" : "black")};
+    border-bottom: ${(props) =>
+      props.toggle ? "blue 3px solid" : "transparent"};
+  }
+  #image {
+    color: ${(props) => (!props.toggle ? "blue" : "black")};
+    border-bottom: ${(props) =>
+      !props.toggle ? "blue 3px solid" : "transparent"};
+  }
+  margin-bottom: 5%;
+  @media (max-width: 500px) {
+    button {
+      font-size: 1rem;
+    }
+  }
+`;
 
 function CreatePost(props) {
-  const history = useHistory();
-  const [post, setPost] = useState({ value: "", length: 0 });
-  const [error, setError] = useState();
-  const updateLength = (e) => {
-    const { value } = e.target;
-    setPost({ value: value, length: value.length });
-  };
-  const submitPost = async () => {
-    try {
-      const cookie = new Cookies();
-      if (post.value) {
-        const response = await axios.post(
-          "/backend/createpost",
-          { data: post.value },
-          {
-            headers: {
-              Authorization: cookie.get("Authorization"),
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          history.push("/forum");
-        }
-      } else {
-        setError("field is required");
-      }
-    } catch {
-      console.log("unable to submit post");
+  const [postOption, setPostOption] = useState(true);
+  const toggle = (e) => {
+    console.log(postOption);
+    if (e.target.id === "post") {
+      return setPostOption(true);
     }
+    setPostOption(false);
   };
-
   return (
     <div className="flex-container">
       <h1 style={{ marginTop: "3%" }}>create a post</h1>
       <CreatePostContainer>
         <div>
-          <small style={{ float: "right", fontSize: "1.5rem" }}>
-            {post.length}/255
-          </small>
+          <Options toggle={postOption}>
+            <button id="post" onClick={toggle}>
+              <FaPen /> Post
+            </button>
+            <button id="image" onClick={toggle}>
+              <FaImage /> image & video
+            </button>
+
+            <hr style={{ margin: 0 }} />
+          </Options>
         </div>
-        <textarea
-          style={{ marginBottom: "2%" }}
-          onChange={updateLength}
-          maxLength="255"
-          placeholder="what is on your mind?"
-          className="post-textArea"></textarea>
-        <small style={{ margin: "0" }} className="error">
-          {error}
-        </small>
-        <br />
-        <Button
-          style={{ marginTop: "2%" }}
-          className="create-post-button"
-          onClick={submitPost}>
-          create post
-        </Button>
+        <div style={{ padding: "0 3rem 3rem 3rem" }}>
+          {postOption ? <WrittenPost /> : <MultiMedia />}
+        </div>
       </CreatePostContainer>
     </div>
   );
