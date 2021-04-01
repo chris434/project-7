@@ -41,11 +41,12 @@ function SingleFooter(props) {
     setContent(e.target.innerHTML);
     setToggle(true);
   };
+
   return (
     <div>
       <PostFooter>
         <LikeLink id={props.id} onClick={contentSwitch} toggle={toggle}>
-          likes 0
+          likes {props.like_count}
         </LikeLink>
 
         <div

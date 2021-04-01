@@ -1,5 +1,5 @@
 import { FaBookmark } from "react-icons/fa";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import PostHeader from "../posts/post-header";
@@ -81,7 +81,15 @@ function Posts(props) {
           <article>{props.post_content}</article>
         )}
       </PostContent>
-      {!props.page ? <MainFooter /> : <SingleFooter id={props.post_id} />}
+      {!props.page ? (
+        <MainFooter
+          like_count={props.like_count}
+          liked={props.liked}
+          post_id={props.post_id}
+        />
+      ) : (
+        <SingleFooter id={props.post_id} like_count={props.like_count} />
+      )}
     </Post>
   );
 }

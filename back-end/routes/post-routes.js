@@ -8,6 +8,8 @@ const fileUpload = require('../middleware/upload-file')
 
 
 router.post('/createpost', auth, multer.single('image'), fileUpload, postCtrl.createPost)
+router.post('/like/:id', auth, postCtrl.postLikes)
 router.get('/posts', auth, postCtrl.getPosts)
 router.get('/post/:id', auth, postCtrl.getPost)
+
 module.exports = router

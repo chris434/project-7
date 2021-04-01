@@ -31,7 +31,7 @@ const Button = styled.button`
 
 function Forum(props) {
   const history = useHistory();
-  const [posts, setPosts] = useState([]);
+  const [data, setData] = useState([]);
   useEffect(() => {
     const getPosts = async () => {
       const cookie = new Cookies();
@@ -43,7 +43,7 @@ function Forum(props) {
           },
         });
         console.log(response);
-        setPosts(response.data);
+        setData(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -51,7 +51,7 @@ function Forum(props) {
     getPosts();
   }, []);
 
-  console.log(posts);
+  console.log(data);
   // const posts = JSON.parse(props.data);
 
   return (
@@ -60,7 +60,7 @@ function Forum(props) {
         <FaPlus className="plus-icon" /> create post
       </Button>
       <PostsContainer>
-        {posts.map((post) => {
+        {data.map((post) => {
           const style = { marginTop: "0", height: "auto", width: "60%" };
           const data = { ...post, style };
           return <Post key={post.post_id} {...data}></Post>;
