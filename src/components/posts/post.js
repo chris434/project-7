@@ -1,6 +1,6 @@
 import { FaBookmark } from "react-icons/fa";
 import { useRef } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 import PostHeader from "../posts/post-header";
 import MainFooter from "../posts/all-post-footer";
@@ -51,12 +51,7 @@ function Posts(props) {
   const postContent = useRef();
   const param = useParams();
   console.log(param);
-  const history = useHistory();
   console.log(props);
-
-  const singlePost = () => {
-    history.push(`/post/${props.post_id}`);
-  };
 
   return (
     <Post {...props.style}>
@@ -68,19 +63,20 @@ function Posts(props) {
           </small>
         </b>
       </Read>
-      <PostContent
-        onClick={singlePost}
-        height={props.style.height}
-        ref={postContent}
-        id={props.post_id}>
-        {props.image_url ? (
-          <ImageContainer>
-            <img src={props.image_url} alt="" />
-          </ImageContainer>
-        ) : (
-          <article>{props.post_content}</article>
-        )}
-      </PostContent>
+      <Link to={{ pathname: `/post/${props.post_id}`, state: "likes" }}>
+        <PostContent
+          height={props.style.height}
+          ref={postContent}
+          id={props.post_id}>
+          {props.image_url ? (
+            <ImageContainer>
+              <img src={props.image_url} alt="" />
+            </ImageContainer>
+          ) : (
+            <article>{props.post_content}</article>
+          )}
+        </PostContent>
+      </Link>
       {!props.page ? (
         <MainFooter
           like_count={props.like_count}
@@ -88,7 +84,11 @@ function Posts(props) {
           post_id={props.post_id}
         />
       ) : (
-        <SingleFooter id={props.post_id} like_count={props.like_count} />
+        <SingleFooter
+          id={props.post_id}
+          likeCount={props.like_count}
+          likes={props.likes}
+        />
       )}
     </Post>
   );

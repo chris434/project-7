@@ -2,6 +2,7 @@ import styled from "styled-components";
 import axios from "../axios";
 import Cookies from "universal-cookie";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { FaThumbsUp, FaComment } from "react-icons/fa";
 const Section = styled.div`
@@ -47,6 +48,11 @@ function MainFooter(props) {
   return (
     <div>
       <Section>
+        <Link
+          to={{ pathname: `post/${props.post_id}`, state: true }}
+          style={{ fontSize: "1.2rem" }}>
+          {like.count} likes
+        </Link>
         <small style={{ fontSize: "1.2rem" }}> {like.count} likes </small>
         <small style={{ fontSize: "1.2rem" }}> 0 comments </small>
       </Section>

@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import axios from "./axios";
-
 import Post from "./posts/post";
 
 function PostViewer() {

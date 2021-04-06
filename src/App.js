@@ -4,6 +4,7 @@ import {
   Switch,
   Route,
   Redirect,
+  useRouteMatch,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Home from "./components/home";
@@ -22,6 +23,7 @@ function App() {
   function SecureRoute(props) {
     const [isLoggedIN, setLogin] = useState(true);
     const [info, setData] = useState([]);
+    const { url } = useRouteMatch();
     useEffect(() => {
       let sauce = Axios.CancelToken.source();
       console.log(true);
@@ -52,7 +54,6 @@ function App() {
     }, []);
     return (
       <Route
-        exact
         path={props.path}
         render={(data) => {
           endpoint = props.endpoint || false;
@@ -60,7 +61,7 @@ function App() {
           if (props.computedMatch.params.id) {
             endpoint = `${props.endpoint}/${props.computedMatch.params.id}`;
           }
-          console.log("jnnn");
+          console.log(url);
 
           if (isLoggedIN === true) {
             console.log(info);
@@ -86,22 +87,19 @@ function App() {
           <Route exact path={"/"} component={Home} />
           <Route exact path={"/signup"} component={SignUP} />
           <SecureRoute
+            exact
             endpoint={"/posts"}
             path={"/forum"}
             component={Forum}></SecureRoute>
           <SecureRoute
             exact
-            endpoint={"/post"}
-            path={"/post/:id"}
-            component={PostViewer}></SecureRoute>
-          <SecureRoute
             endpoint={"/authenticate"}
             path={"/createpost"}
             component={CreatePost}></SecureRoute>
           <SecureRoute
-            endpoint={"/authenticate"}
+            endpoint={"/post"}
             path={"/post/:id"}
-            component={CreatePost}></SecureRoute>
+            component={PostViewer}></SecureRoute>
         </Switch>
       </div>
     </Router>

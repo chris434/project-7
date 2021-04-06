@@ -54,10 +54,12 @@ exports.getPost = async(req, res) => {
         const user_id = req.id
         console.log(id)
         const post = await pool.query(`SELECT post_id, post_content,image_url,like_count,comment_count, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
+        const likes = await pool.query(`SELECT first_name,last_name,profile_image FROM likes JOIN users ON (likes.user_id = users.user_id) WHERE post_id = ${id}`)
         await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES(${user_id},${id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
         console.log(post.rows[0].created_date)
         post.rows[0].created_date = dateConverter(post.rows[0].created_date)
-        res.json(post.rows[0])
+        const data = {...post.rows[0], likes: likes.rows }
+        res.status(200).json(data)
 
     } catch (e) {
         console.log(e)
