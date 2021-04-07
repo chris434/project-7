@@ -2,6 +2,12 @@
     text-align: center;
 }
 
+.disabled {
+    cursor: not-allowed;
+    opacity: 1.8;
+    background-color: gray;
+}
+
 .link {
     border-bottom: solid black 1px;
     background-color: white;
@@ -9,22 +15,6 @@
     padding: 1rem 3rem 1rem 3rem;
     color: black;
     text-decoration: none;
-}
-
-.active-like {
-    border: solid black 1px;
-    background-color: white;
-    border-left: none;
-    border-bottom: none;
-    padding: 1rem 3rem 1rem 3rem;
-}
-
-.active-comment {
-    border: solid black 1px;
-    background-color: white;
-    border-right: none;
-    border-bottom: none;
-    padding: 1rem 3rem 1rem 3rem;
 }
 
 .nav-bar {

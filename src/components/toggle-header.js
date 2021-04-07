@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { FaPen, FaImage } from "react-icons/fa";
+
 const Options = styled.section`
   ul {
     display: flex;

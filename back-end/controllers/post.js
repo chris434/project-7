@@ -55,10 +55,11 @@ exports.getPost = async(req, res) => {
         console.log(id)
         const post = await pool.query(`SELECT post_id, post_content,image_url,like_count,comment_count, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
         const likes = await pool.query(`SELECT first_name,last_name,profile_image FROM likes JOIN users ON (likes.user_id = users.user_id) WHERE post_id = ${id}`)
+        const comments = await pool.query(`SELECT first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = ${id}`)
         await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES(${user_id},${id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
         console.log(post.rows[0].created_date)
         post.rows[0].created_date = dateConverter(post.rows[0].created_date)
-        const data = {...post.rows[0], likes: likes.rows }
+        const data = {...post.rows[0], likes: likes.rows, comments: comments.rows }
         res.status(200).json(data)
 
     } catch (e) {
@@ -83,4 +84,20 @@ exports.postLikes = async(req, res) => {
         console.log(e)
     }
 
+}
+exports.postComment = async(req, res) => {
+    const userId = req.id
+    const comment = req.body.comment
+    console.log(comment)
+    const postId = req.params.id
+    try {
+        await pool.query(`INSERT INTO comments (comment_content,user_id,post_id) VALUES('${comment}',${userId},${postId})`)
+        await pool.query(`UPDATE posts SET comment_count = (SELECT COUNT(comment_id + 1) FROM comments WHERE post_id =${postId}) WHERE post_id = ${postId}`)
+
+        return res.status(200).json('comment posted')
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json('fail to post comment')
+    }
 }

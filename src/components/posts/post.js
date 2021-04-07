@@ -87,7 +87,9 @@ function Posts(props) {
         <SingleFooter
           id={props.post_id}
           likeCount={props.like_count}
+          commentCount={props.comment_count}
           likes={props.likes}
+          comments={props.comments}
         />
       )}
     </Post>
