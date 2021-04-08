@@ -2,6 +2,7 @@ const pool = require('../db/db.config')
 const dateConverter = require('../utils/date-converter')
 
 
+
 exports.getPosts = async(req, res) => {
     try {
         let posts = await pool.query("SELECT post_id, post_content,image_url,like_count,comment_count, posts.created_date, first_name, last_name,profile_image FROM posts JOIN users ON (posts.user_id = users.user_id) ORDER BY posts.created_date DESC")
@@ -99,5 +100,29 @@ exports.postComment = async(req, res) => {
     } catch (error) {
         console.log(error)
         return res.status(400).json('fail to post comment')
+    }
+}
+exports.deleteAccount = async(req, res) => {
+    const user_id = req.id
+    console.log(req.id)
+    try {
+        const posts = await pool.query(`SELECT post_id FROM posts WHERE user_id =${user_id}`)
+        console.log(posts.rows)
+            //deleting other users like/comments relating to this users posts
+        for (let i = 0; i < posts.rows.length; i++) {
+            await pool.query(`DELETE FROM likes WHERE post_id =${posts.rows[i].post_id}`)
+            await pool.query(`DELETE FROM comments WHERE post_id =${posts.rows[i].post_id}`)
+            await pool.query(`DELETE FROM user_read WHERE post_id =${posts.rows[i].post_id}`)
+        }
+        //deleting post content the current user has liked/commented
+        await pool.query(`DELETE FROM likes WHERE user_id =${user_id}`)
+        await pool.query(`DELETE FROM comments WHERE user_id =${user_id}`)
+        await pool.query(`DELETE FROM user_read WHERE user_id =${user_id}`)
+        await pool.query(`DELETE FROM posts WHERE user_id =${user_id}`)
+        await pool.query(`DELETE FROM users WHERE user_id =${user_id}`)
+        return res.status(200).json('account deleted')
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
     }
 }

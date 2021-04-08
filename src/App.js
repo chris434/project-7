@@ -16,6 +16,7 @@ import axios from "./components/axios";
 import Axios from "axios";
 import Cookies from "universal-cookie";
 import CreatePost from "./components/create-post";
+import Delete from "./components/delete";
 
 function App() {
   let endpoint = false;
@@ -100,6 +101,9 @@ function App() {
             endpoint={"/post"}
             path={"/post/:id"}
             component={PostViewer}></SecureRoute>
+          <SecureRoute
+            path={"/delete_account"}
+            component={Delete}></SecureRoute>
         </Switch>
       </div>
     </Router>
