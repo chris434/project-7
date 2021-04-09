@@ -61,7 +61,7 @@ function Previews(props) {
     }
     const form = new FormData();
     form.append("image", postImage);
-    form.append("field", "image_url");
+    form.append("field", "image");
 
     setImage({
       image: form,

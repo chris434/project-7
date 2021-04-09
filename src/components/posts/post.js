@@ -68,12 +68,12 @@ function Posts(props) {
           height={props.style.height}
           ref={postContent}
           id={props.post_id}>
-          {props.image_url ? (
+          {props.image ? (
             <ImageContainer>
-              <img src={props.image_url} alt="" />
+              <img src={props.image} alt="" />
             </ImageContainer>
           ) : (
-            <article>{props.post_content}</article>
+            <article>{props.text}</article>
           )}
         </PostContent>
       </Link>

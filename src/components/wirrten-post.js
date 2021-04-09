@@ -8,7 +8,7 @@ const WrittenPost = () => {
     const { value } = e.target;
 
     setPost({
-      data: { value: value, field: "post_content" },
+      data: { value: value, field: "text" },
       length: value.length,
     });
   };

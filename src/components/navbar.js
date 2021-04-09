@@ -54,7 +54,7 @@ function Navbar(props) {
       <div>
         <section className="profile-dropdown">
           <ul ref={dropDownRef} style={{ display: open }}>
-            <li>
+            <li onClick={() => history.push("/delete_account")}>
               <FaUser />
               {`${props.first_name} ${props.last_name}`}
             </li>
