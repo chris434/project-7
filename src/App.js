@@ -4,9 +4,10 @@ import {
   Switch,
   Route,
   Redirect,
-  useRouteMatch,
+  useLocation,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
+import LoginContext from "./components/login-context";
 import Home from "./components/home";
 import SignUP from "./components/signup";
 import Forum from "./components/forum";
@@ -20,16 +21,17 @@ import Delete from "./components/delete";
 
 function App() {
   let endpoint = false;
+  const [route, setRoute] = useState("/forum");
 
   function SecureRoute(props) {
     const [isLoggedIN, setLogin] = useState(true);
     const [info, setData] = useState([]);
-    const { url } = useRouteMatch();
+    const location = useLocation();
+
     useEffect(() => {
       let sauce = Axios.CancelToken.source();
       console.log(true);
       const getUser = async () => {
-        console.log("kobbb");
         try {
           const cookie = new Cookies();
           console.log(cookie.get("Authorization"));
@@ -39,8 +41,6 @@ function App() {
               Authorization: cookie.get("Authorization"),
             },
           });
-          console.log(response.data);
-          console.log("k");
 
           setData(response.data);
           setLogin(true);
@@ -62,10 +62,9 @@ function App() {
           if (props.computedMatch.params.id) {
             endpoint = `${props.endpoint}/${props.computedMatch.params.id}`;
           }
-          console.log(url);
 
           if (isLoggedIN === true) {
-            console.log(info);
+            setRoute(null);
             return (
               <div>
                 <NavBar {...info}></NavBar>
@@ -75,6 +74,7 @@ function App() {
               </div>
             );
           } else {
+            setRoute(location.pathname);
             return <Redirect to={{ pathname: "/" }}></Redirect>;
           }
         }}></Route>
@@ -85,7 +85,12 @@ function App() {
     <Router>
       <div className="app">
         <Switch>
-          <Route exact path={"/"} component={Home} />
+          <Route exact path={"/"}>
+            <LoginContext.Provider value={route}>
+              <Home />
+            </LoginContext.Provider>
+          </Route>
+
           <Route exact path={"/signup"} component={SignUP} />
           <SecureRoute
             exact

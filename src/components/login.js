@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "./axios";
 import Cookies from "universal-cookie";
 import Button from "./styled-button";
-
+import LoginContext from "./login-context";
 import login from "./loginFuction";
 
 function Login() {
+  const loginRoute = useContext(LoginContext);
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState();
   const history = useHistory();
@@ -30,7 +31,7 @@ function Login() {
       .then((res) => {
         const cookie = new Cookies();
         cookie.set("Authorization", `bearer ${res.data.token}`);
-        history.push("/forum");
+        history.push(loginRoute);
       })
       .catch((Error) => {
         setError(Error.response.data);
