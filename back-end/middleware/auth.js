@@ -7,12 +7,12 @@ module.exports = async(req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN)
 
         if (!decodedToken) {
-            return res.json('unauthorized user')
+            throw new Error('unauthorized user')
         }
         req.id = decodedToken.id
         next()
     } catch (e) {
-        console.log(e)
-        res.status(400).json(e)
+
+        return res.status(401).json(e)
     }
 }

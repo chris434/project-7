@@ -1,14 +1,16 @@
 import axios from './axios'
 import Cookies from "universal-cookie"
 
-const LoginFunction = async(email, password) => {
-    try {
-        const response = await axios.post('/backend/login', { email: email, password: password })
+const LoginFunction = (email, password) => {
+
+    return axios.post('/backend/login', { email: email, password: password }).then(res => {
+        console.log('jj')
+        console.log(res)
         const cookie = new Cookies()
-        cookie.set('Authorization', `bearer ${response.data.token}`)
-        return response
-    } catch (e) {
-        console.log(e)
-    }
+        cookie.set('Authorization', `bearer ${res.data.token}`)
+    }).catch(Error => {
+        return console.log(Error.response)
+
+    })
 }
 export default LoginFunction

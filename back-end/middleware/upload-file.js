@@ -16,7 +16,7 @@ const uploadFile = async(req, res, next) => {
 
         next()
     } catch (e) {
-        res.status(400).json(e)
+        res.status(401).json(e)
     }
 }
 module.exports = uploadFile

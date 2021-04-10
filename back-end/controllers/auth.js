@@ -16,7 +16,7 @@ exports.signUp = async(req, res) => {
         return res.status(200).json('user created')
     } catch (e) {
         if (e.constraint === 'users_email_key') {
-            return res.status(202).json({ error: 'email', details: 'this email already exists' })
+            return res.status(401).json({ error: 'email', details: 'this email already exists' })
         }
         res.status(202).json(e)
     }
@@ -27,24 +27,29 @@ exports.login = async(req, res) => {
     const lookUpUser = `SELECT * FROM users WHERE email='${email}'`
     try {
         const user = await pool.query(lookUpUser)
-        console.log('j')
-        console.log(user.rows[0])
+
+        if (!user.rowCount) {
+            throw new Error('this email is not registered')
+        }
+
         const correctPassword = await bcrypt.compare(password, user.rows[0].user_password)
-        if (!correctPassword) return res.status(202).json({ error: 'email or password incorrect' })
+
+        if (!correctPassword) {
+            throw new Error('email or password incorrect')
+        }
         const payload = { id: user.rows[0].user_id }
         const token = jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: '24h' })
-        res.status(200).json({
-            userId: user.rows[0].user_id,
-            token: token
-        })
+
+        res.status(200).json({ token: token })
     } catch (e) {
-        return res.status(400).json({ error: 'email or password incorrect' })
+        console.log(e)
+        return res.status(401).json(e.message)
     }
 }
 exports.authenticate = async(req, res) => {
     try {
-        console.log('k')
         const user = await pool.query(`SELECT profile_image, first_name, last_name FROM users WHERE user_id = ${req.id}`)
+
         const data = user.rows[0]
         return res.status(200).json(data)
     } catch (e) {

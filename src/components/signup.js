@@ -4,6 +4,7 @@ import axios from "./axios";
 import titleImage from "../images/icon-left-font-monochrome-black.svg";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import login from "./loginFuction";
+import Cookies from "universal-cookie";
 import Button from "./styled-button";
 
 function SignUp() {
@@ -59,22 +60,32 @@ function SignUp() {
   };
   const postData = async () => {
     const form = { ...data, password };
-    try {
-      const response = await axios.post("/backend/signup", form);
-      if (response.data.error === "email") {
-        return setError((state) => ({
-          ...state,
-          email: response.data.details,
-        }));
-      }
-
-      const loggedIn = await login(data.email, password);
-      if (loggedIn.status === 200) {
-        return history.push("/forum");
-      }
-    } catch {
-      console.log("unable to create user");
-    }
+    //create user
+    await axios
+      .post("/backend/signup", form)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        if (error.response.data.error === "email") {
+          return setError((state) => ({
+            ...state,
+            email: error.response.data.details,
+          }));
+        }
+        console.log("unable to create user");
+      });
+    //log in user
+    await axios
+      .post("/backend/login", { email: form.email, password: password })
+      .then((res) => {
+        const cookie = new Cookies();
+        cookie.set("Authorization", `bearer ${res.data.token}`);
+        history.push("/forum");
+      })
+      .catch((Error) => {
+        console.log(Error.response);
+      });
   };
   const ValidateData = (e) => {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

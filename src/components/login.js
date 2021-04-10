@@ -18,28 +18,23 @@ function Login() {
       [name]: value,
     }));
   };
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     console.log("sub");
     const { email, password } = form;
     if (email === "" || password === "") {
       return setError("email and password required");
     }
-    console.log("k");
-    const response = await axios.post("/backend/login", {
-      email: email,
-      password: password,
-    });
-    console.log("j");
-    const cookie = new Cookies();
-    cookie.set("Authorization", `bearer ${response.data.token}`);
-    console.log(cookie.get("Authorization"));
-    if (response && response.status === 200) {
-      console.log(cookie.get("Authorization"));
-      return history.push("/forum");
-    } else if (response) {
-      setError(response.data.error);
-    }
+    axios
+      .post("/backend/login", { email: email, password: password })
+      .then((res) => {
+        const cookie = new Cookies();
+        cookie.set("Authorization", `bearer ${res.data.token}`);
+        history.push("/forum");
+      })
+      .catch((Error) => {
+        setError(Error.response.data);
+      });
   };
   const singUp = () => {
     history.push("/signup");
