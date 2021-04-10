@@ -1,4 +1,5 @@
 import "./App.css";
+import "./loading.css";
 import {
   BrowserRouter as Router,
   Switch,
@@ -25,6 +26,7 @@ function App() {
 
   function SecureRoute(props) {
     const [isLoggedIN, setLogin] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [info, setData] = useState([]);
     const location = useLocation();
 
@@ -41,7 +43,7 @@ function App() {
               Authorization: cookie.get("Authorization"),
             },
           });
-
+          setLoading(true);
           setData(response.data);
           setLogin(true);
         } catch (e) {
@@ -63,15 +65,22 @@ function App() {
             endpoint = `${props.endpoint}/${props.computedMatch.params.id}`;
           }
 
-          if (isLoggedIN === true) {
+          if (isLoggedIN) {
             setRoute(null);
+
             return (
-              <div>
-                <NavBar {...info}></NavBar>
-                <main>
-                  <props.component></props.component>
-                </main>
-              </div>
+              <>
+                {loading ? (
+                  <div>
+                    <NavBar {...info}></NavBar>
+                    <main>
+                      <props.component></props.component>
+                    </main>
+                  </div>
+                ) : (
+                  <div className="loader"></div>
+                )}
+              </>
             );
           } else {
             setRoute(location.pathname);
