@@ -8,7 +8,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import LoginContext from "./components/login-context";
+import LoginContext from "./components/context/login-context";
+import UserContext from "./components/context/userContext";
 import Home from "./components/home";
 import SignUP from "./components/signup";
 import Forum from "./components/forum";
@@ -25,9 +26,9 @@ function App() {
   const [route, setRoute] = useState("/forum");
 
   function SecureRoute(props) {
+    const [info, setData] = useState([]);
     const [isLoggedIN, setLogin] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [info, setData] = useState([]);
     const location = useLocation();
 
     useEffect(() => {
@@ -64,26 +65,25 @@ function App() {
           if (props.computedMatch.params.id) {
             endpoint = `${props.endpoint}/${props.computedMatch.params.id}`;
           }
-
+          setRoute(location.pathname);
           if (isLoggedIN) {
-            setRoute(null);
-
             return (
               <>
                 {loading ? (
-                  <div>
-                    <NavBar {...info}></NavBar>
-                    <main>
-                      <props.component></props.component>
-                    </main>
-                  </div>
+                  <UserContext.Provider value={info}>
+                    <div>
+                      <NavBar {...info}></NavBar>
+                      <main>
+                        <props.component></props.component>
+                      </main>
+                    </div>
+                  </UserContext.Provider>
                 ) : (
                   <div className="loader"></div>
                 )}
               </>
             );
           } else {
-            setRoute(location.pathname);
             return <Redirect to={{ pathname: "/" }}></Redirect>;
           }
         }}></Route>
@@ -99,7 +99,6 @@ function App() {
               <Home />
             </LoginContext.Provider>
           </Route>
-
           <Route exact path={"/signup"} component={SignUP} />
           <SecureRoute
             exact

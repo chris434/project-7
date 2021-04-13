@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import PostContext from "./context/post-context";
 import Cookies from "universal-cookie";
 import axios from "./axios";
 import Post from "./posts/post";
@@ -18,7 +19,12 @@ function PostViewer() {
           },
         });
         console.log(response);
-        setPosts(response.data);
+        setPosts({
+          ...response.data,
+          read: true,
+          page: true,
+          style: { marginTop: "5rem", width: "60%", height: "auto" },
+        });
       } catch (error) {
         console.log(error);
       }
@@ -28,10 +34,13 @@ function PostViewer() {
   const style = { marginTop: "5rem", width: "60%" };
   const data = { ...post, page: true, style };
   console.log("jii");
+  console.log(data);
   return (
-    <div className="flex-container">
-      <Post read={true} {...data} />
-    </div>
+    <PostContext.Provider value={post}>
+      <div className="flex-container">
+        <Post read={true} {...data} />
+      </div>
+    </PostContext.Provider>
   );
 }
 export default PostViewer;

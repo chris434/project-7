@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FaThumbsUp } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 import PostComment from "./postComment";
 
 const LikeSection = styled.section`
@@ -24,22 +25,26 @@ const CommentBody = styled.p`
   font-size: 1.5rem;
 `;
 function Likes(props) {
+  const contentContainer = useRef();
+  const { state } = useLocation();
   const [data, setData] = useState(props.content);
-  const update = (state) => {
-    console.log(state);
 
-    setData(state);
-    console.log(data);
+  const update = (state) => {
+    setData([...state]);
   };
 
   useEffect(() => {
+    if (state.scroll) {
+      window.scrollTo(0, contentContainer.current.offsetTop);
+    }
+
     if (props.content) {
       return setData(props.content);
     }
-  }, [props]);
-  console.log(data);
+  }, [props, state]);
+
   return (
-    <div>
+    <div ref={contentContainer}>
       {data ? (
         <h2 style={{ textAlign: "center" }}>
           {`${data.length} ${props.state ? "likes" : "comments"}`}
@@ -54,6 +59,7 @@ function Likes(props) {
       )}
       {data
         ? data.map((item) => {
+            console.log(props.state);
             return (
               <LikeSection state={props.state}>
                 <div id="header">

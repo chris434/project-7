@@ -1,10 +1,11 @@
 import { FaBookmark } from "react-icons/fa";
-import { useRef } from "react";
+import { useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 import PostHeader from "../posts/post-header";
 import MainFooter from "../posts/all-post-footer";
 import SingleFooter from "./single-post-footer";
+import PostContext from "../context/post-context";
 
 const Post = styled.section`
   background-color: white;
@@ -27,9 +28,10 @@ const Read = styled.div`
 `;
 const PostContent = styled.div`
   font-size: 2rem;
-  cursor: pointer;
+  cursor: ${(props) => (!props.cursor ? "pointer" : "auto")};
 
   height: ${(props) => props.height || "auto"};
+  width: 80%;
 
   margin: 3%;
 `;
@@ -46,43 +48,52 @@ const ImageContainer = styled.div`
     }
   }
 `;
+function PostInfo() {
+  const post = useContext(PostContext);
+  return (
+    <PostContent cursor={post.page} id={post.post_id}>
+      {post.image ? (
+        <ImageContainer>
+          <img src={post.image} alt="" />
+        </ImageContainer>
+      ) : (
+        <article>{post.text}</article>
+      )}
+    </PostContent>
+  );
+}
 
 function Posts(props) {
-  const postContent = useRef();
   const param = useParams();
+  const post = useContext(PostContext);
+
+  console.log(post);
   console.log(param);
   console.log(props);
 
   return (
-    <Post {...props.style}>
-      <PostHeader {...props}> </PostHeader> <hr style={{ margin: 0 }} />
-      <Read read={props.read}>
+    <Post {...post.style}>
+      <PostHeader> </PostHeader> <hr style={{ margin: 0 }} />
+      <Read read={post.read}>
         <b>
           <small>
-            <FaBookmark /> {props.read ? "read" : "unread"}
+            <FaBookmark /> {post.read ? "read" : "unread"}
           </small>
         </b>
       </Read>
-      <Link to={{ pathname: `/post/${props.post_id}`, state: "likes" }}>
-        <PostContent
-          height={props.style.height}
-          ref={postContent}
-          id={props.post_id}>
-          {props.image ? (
-            <ImageContainer>
-              <img src={props.image} alt="" />
-            </ImageContainer>
-          ) : (
-            <article>{props.text}</article>
-          )}
-        </PostContent>
-      </Link>
-      {!props.page ? (
-        <MainFooter
-          like_count={props.like_count}
-          liked={props.liked}
-          post_id={props.post_id}
-        />
+      {!post.page ? (
+        <Link
+          to={{
+            pathname: `/post/${post.post_id}`,
+            state: { content: true, scroll: false },
+          }}>
+          <PostInfo />
+        </Link>
+      ) : (
+        <PostInfo />
+      )}
+      {!post.page ? (
+        <MainFooter />
       ) : (
         <SingleFooter
           id={props.post_id}

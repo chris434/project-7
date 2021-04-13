@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import axios from "./axios";
 import Cookies from "universal-cookie";
 import Button from "./styled-button";
-import LoginContext from "./login-context";
+import LoginContext from "./context/login-context";
 import login from "./loginFuction";
 
 function Login() {

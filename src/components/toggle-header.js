@@ -13,7 +13,7 @@ const Options = styled.section`
     outline: none;
     font-size: 1.5rem;
     padding: 1rem;
-
+    cursor: pointer;
     width: auto;
     border-right: 1px black solid;
   }

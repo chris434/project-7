@@ -1,17 +1,21 @@
 import styled from "styled-components";
-import { useRef, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useRef, useEffect, useState, useContext } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "./axios";
 import Cookies from "universal-cookie";
+import UserContext from "./context/userContext";
+import ToggleContext from "./context/toggle-context";
+
 const Button = styled.button`
-  background-color: rgb(74, 133, 16);
+  background-color: ${(props) => (props.state ? "rgb(74, 133, 16)" : "gray")};
+  border-color: ${(props) => (props.state ? "rgb(74, 133, 16)" : "gray")};
+  cursor: ${(props) => (props.state ? "pointer" : "not-allowed")};
   color: white;
   font-size: 1.5rem;
   padding: 0.5rem;
-  border-color: rgb(74, 133, 16);
+
   outline: none;
   margin-right: 0.5rem;
-  cursor: "pointer";
 `;
 const ButtonsContainer = styled.div`
   display: ${(props) => props.state};
@@ -32,11 +36,17 @@ const PostCommentContainer = styled.div`
 `;
 function PostComment(props) {
   const param = useParams();
+  const { state } = useLocation();
+
   const comment = useRef();
-  const submit = useRef();
+
+  const user = useContext(UserContext);
+  const { count, setCount } = useContext(ToggleContext);
+
   const [height, setHeight] = useState("1.5rem");
   const [lines, SetLines] = useState();
   const [toggle, setToggle] = useState("none");
+  const [input, setInput] = useState({ value: "", active: false });
 
   const submitComment = async () => {
     try {
@@ -53,12 +63,21 @@ function PostComment(props) {
       );
 
       const data = props.comments;
-
-      data.push({
-        first_name: "bob",
-        last_name: "joy",
-        comment_content: comment.current.value,
+      data.unshift({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        profile_image: user.profile_image,
+        comment_content: input.value,
+        created_time: "now",
       });
+      comment.current.value = "";
+      setToggle("none");
+
+      setCount({
+        commentCount: count.commentCount + 1,
+        likeCount: count.likeCount,
+      });
+
       props.state(data);
     } catch (e) {
       console.log(e);
@@ -70,19 +89,32 @@ function PostComment(props) {
     return setToggle("none");
   };
 
-  const checkHeight = () => {
-    const currentValue = comment.current.value.split("\n").length;
-    if (comment.current.scrollHeight > comment.current.clientHeight) {
-      setHeight(comment.current.scrollHeight + "px");
+  const checkHeight = (e) => {
+    const input = e.target;
+    const currentValue = input.value.split("\n").length;
+    if (input.scrollHeight > input.clientHeight) {
+      setHeight(input.scrollHeight + "px");
     }
     if (currentValue < lines) {
-      setHeight(comment.current.scrollHeight - 30 + "px");
+      setHeight(input.scrollHeight - 30 + "px");
     }
-    SetLines(comment.current.value.split("\n").length);
+    SetLines(input.value.split("\n").length);
+
+    if (input.value.length !== 0) {
+      return setInput({ value: input.value, active: true });
+    }
+    setInput({ value: input.value, active: false });
   };
 
   useEffect(() => {
-    checkHeight();
+    if (state.focus) {
+      comment.current.focus();
+      setToggle("flex");
+    }
+    return () => {
+      state.focus = false;
+      setToggle("none");
+    };
   }, []);
 
   return (
@@ -98,10 +130,15 @@ function PostComment(props) {
       <hr style={{ borderColor: "blue" }} />
       <br />
       <ButtonsContainer state={toggle}>
-        <Button onClick={submitComment} ref={submit}>
+        <Button
+          state={input.active}
+          disabled={!input.active}
+          onClick={submitComment}>
           submit
         </Button>
-        <Button onClick={toggleController}>cancel</Button>
+        <Button state={true} onClick={toggleController}>
+          cancel
+        </Button>
       </ButtonsContainer>
     </PostCommentContainer>
   );

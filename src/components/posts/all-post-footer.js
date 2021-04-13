@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import axios from "../axios";
 import Cookies from "universal-cookie";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import PostContext from "../context/post-context.js";
 
-import { FaThumbsUp, FaComment } from "react-icons/fa";
+import { FaComment, FaThumbsUp } from "react-icons/fa";
+
 const Section = styled.div`
   padding: 1rem;
   svg {
@@ -18,12 +20,13 @@ const Section = styled.div`
   }
 `;
 
-function MainFooter(props) {
-  console.log(props);
+function MainFooter() {
+  const post = useContext(PostContext);
   const [like, setLike] = useState({
-    count: props.like_count,
-    color: props.liked,
+    count: post.like_count,
+    color: post.liked,
   });
+
   const postLike = async (post_id) => {
     const cookie = new Cookies();
     try {
@@ -49,18 +52,33 @@ function MainFooter(props) {
     <div>
       <Section>
         <Link
-          to={{ pathname: `post/${props.post_id}`, state: true }}
+          to={{
+            pathname: `post/${post.post_id}`,
+            state: { content: false, scroll: true },
+          }}
           style={{ fontSize: "1.2rem" }}>
           {like.count} likes
         </Link>
-        <small style={{ fontSize: "1.2rem" }}> {like.count} likes </small>
-        <small style={{ fontSize: "1.2rem" }}> 0 comments </small>
+
+        <Link
+          to={{
+            pathname: `post/${post.post_id}`,
+            state: { content: false, scroll: true },
+          }}
+          style={{ fontSize: "1.2rem" }}>
+          {post.comment_count} comments
+        </Link>
       </Section>
       <hr />
       <Section liked={like.color}>
-        <FaThumbsUp onClick={() => postLike(props.post_id)} fontSize="1.5rem" />
-
-        <FaComment color="grey" fontSize="1.5rem" />
+        <FaThumbsUp onClick={() => postLike(post.post_id)} fontSize="1.5rem" />
+        <Link
+          to={{
+            pathname: `/post/${post.post_id}`,
+            state: { content: false, scroll: true, focus: true },
+          }}>
+          <FaComment color="grey" fontSize="1.5rem" />
+        </Link>
       </Section>
     </div>
   );

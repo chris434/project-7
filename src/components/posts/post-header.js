@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useContext } from "react";
+import PostContext from "../context/post-context";
 import { FaArrowLeft } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 
@@ -17,9 +19,11 @@ const PostContainer = styled.div`
 
 function PostHeader(props) {
   const history = useHistory();
+  const post = useContext(PostContext);
+  console.log(post);
   return (
     <PostContainer>
-      {props.page ? (
+      {post.page ? (
         <FaArrowLeft
           onClick={() => history.push("/forum")}
           fontSize="2rem"
@@ -27,11 +31,12 @@ function PostHeader(props) {
       ) : null}
       <img
         className="profile-image"
-        src={props.profile_image}
-        alt={props.first_name + " " + props.last_name}
+        style={{ cursor: "auto" }}
+        src={post.profile_image}
+        alt={post.first_name + " " + post.last_name}
       />
       <small style={{ fontSize: "1.5rem" }}>
-        <b>{props.first_name + " " + props.last_name}</b> {props.created_date}
+        <b>{post.first_name + " " + post.last_name}</b> {post.created_date}
       </small>
     </PostContainer>
   );

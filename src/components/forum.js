@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import PostContext from "./context/post-context";
 
 const PostsContainer = styled.div`
   padding: 0 2rem 0% 2rem;
@@ -62,8 +63,12 @@ function Forum(props) {
       <PostsContainer>
         {data.map((post) => {
           const style = { marginTop: "0", height: "auto", width: "60%" };
-          const data = { ...post, style };
-          return <Post key={post.post_id} {...data}></Post>;
+          const data = { ...post, style, page: false };
+          return (
+            <PostContext.Provider value={data}>
+              <Post key={post.post_id}></Post>
+            </PostContext.Provider>
+          );
         })}
       </PostsContainer>
     </div>
