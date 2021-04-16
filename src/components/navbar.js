@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import titleLogo from "../images/icon-left-font-monochrome-black.svg";
 import { FaUser, FaCog, FaPowerOff } from "react-icons/fa";
@@ -12,7 +12,6 @@ function Navbar(props) {
   const profileImageRef = useRef();
   const user = useContext(userContext);
   const history = useHistory();
-  const location = useLocation();
   console.log(props);
 
   const keyDown = (e) => {
@@ -38,7 +37,7 @@ function Navbar(props) {
   const logout = () => {
     const cookie = new Cookies();
     cookie.remove("Authorization");
-    history.push("/");
+    history.push("/login");
   };
 
   return (

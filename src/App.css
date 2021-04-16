@@ -21,6 +21,10 @@ form {
     top: 0;
 }
 
+.image-404 {
+    width: 50%;
+}
+
 .read {
     font-size: 1.5rem;
     color: red;
@@ -41,6 +45,10 @@ main {
 .flex-center {
     display: flex;
     justify-content: center;
+}
+
+.can-not-be-found-container {
+    margin: 2rem;
 }
 
 .create-post-container {
@@ -330,5 +338,8 @@ ul {
 @media (max-width: 320px) {
     .password-requirement-container ul li {
         font-size: 0.8rem;
+    }
+    .image-404 {
+        width: 100%;
     }
 }

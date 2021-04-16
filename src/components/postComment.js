@@ -115,7 +115,7 @@ function PostComment(props) {
       state.focus = false;
       setToggle("none");
     };
-  }, []);
+  }, [state]);
 
   return (
     <PostCommentContainer>

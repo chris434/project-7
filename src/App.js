@@ -19,6 +19,7 @@ import Axios from "axios";
 import Cookies from "universal-cookie";
 import CreatePost from "./components/create-post";
 import Delete from "./components/delete";
+import NoResult from "./components/404";
 
 function App() {
   let endpoint = false;
@@ -83,7 +84,7 @@ function App() {
             );
           } else {
             return (
-              <Redirect to={{ pathname: "/", state: pathname }}></Redirect>
+              <Redirect to={{ pathname: "/login", state: pathname }}></Redirect>
             );
           }
         }}></Route>
@@ -94,12 +95,12 @@ function App() {
     <Router>
       <div className="app">
         <Switch>
-          <Route exact path={"/"} component={Home}></Route>
+          <Route exact path={"/login"} component={Home}></Route>
           <Route exact path={"/signup"} component={SignUP} />
           <SecureRoute
             exact
             endpoint={"/posts"}
-            path={"/forum"}
+            path={"/"}
             component={Forum}></SecureRoute>
           <SecureRoute
             exact
@@ -113,6 +114,7 @@ function App() {
           <SecureRoute
             path={"/delete_account"}
             component={Delete}></SecureRoute>
+          <Route path={"/*"} component={NoResult} />
         </Switch>
       </div>
     </Router>

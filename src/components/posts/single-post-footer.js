@@ -1,29 +1,10 @@
 import { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Likes from "../likes";
-import Comments from "../comments";
 import ToggleHeader from "../toggle-header";
-import styled from "styled-components";
 import { FaThumbsUp, FaComment } from "react-icons/fa";
 import PostContext from "../context/post-context";
 import ToggleContext from "../context/toggle-context";
-
-const LikeSection = styled.section`
-  font-size: 2rem;
-  padding: 0 2rem 0 2rem;
-  margin-bottom: 5%;
-  div {
-    display: flex;
-    align-items: center;
-    * {
-      margin-right: 1rem;
-    }
-  }
-  img {
-    width: 3rem;
-    clip-path: circle();
-  }
-`;
 
 function SingleFooter(props) {
   const post = useContext(PostContext);

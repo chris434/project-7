@@ -47,7 +47,7 @@ function Delete() {
         },
       });
       cookie.remove("Authorization");
-      history.push("/");
+      history.push("/login");
     } catch (error) {
       setError(error.response.data);
     }

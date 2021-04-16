@@ -30,7 +30,7 @@ function Login() {
       .then((res) => {
         const cookie = new Cookies();
         cookie.set("Authorization", `bearer ${res.data.token}`);
-        const path = state ? state : "/forum";
+        const path = state ? state : "/";
         history.push(path);
       })
       .catch((Error) => {

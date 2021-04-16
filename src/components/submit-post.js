@@ -24,7 +24,7 @@ const SubmitPost = (props) => {
         });
 
         if (response.status === 200) {
-          history.push("/forum");
+          history.push("/");
         }
       } else {
         setLoading({ style: "none", state: false });
