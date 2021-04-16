@@ -8,7 +8,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import LoginContext from "./components/context/login-context";
 import UserContext from "./components/context/userContext";
 import Home from "./components/home";
 import SignUP from "./components/signup";
@@ -23,13 +22,12 @@ import Delete from "./components/delete";
 
 function App() {
   let endpoint = false;
-  const [route, setRoute] = useState("/forum");
 
   function SecureRoute(props) {
+    const { pathname } = useLocation();
     const [info, setData] = useState([]);
     const [isLoggedIN, setLogin] = useState(true);
     const [loading, setLoading] = useState(false);
-    const location = useLocation();
 
     useEffect(() => {
       let sauce = Axios.CancelToken.source();
@@ -65,14 +63,14 @@ function App() {
           if (props.computedMatch.params.id) {
             endpoint = `${props.endpoint}/${props.computedMatch.params.id}`;
           }
-          setRoute(location.pathname);
+
           if (isLoggedIN) {
             return (
               <>
                 {loading ? (
                   <UserContext.Provider value={info}>
                     <div>
-                      <NavBar {...info}></NavBar>
+                      <NavBar></NavBar>
                       <main>
                         <props.component></props.component>
                       </main>
@@ -84,7 +82,9 @@ function App() {
               </>
             );
           } else {
-            return <Redirect to={{ pathname: "/" }}></Redirect>;
+            return (
+              <Redirect to={{ pathname: "/", state: pathname }}></Redirect>
+            );
           }
         }}></Route>
     );
@@ -94,11 +94,7 @@ function App() {
     <Router>
       <div className="app">
         <Switch>
-          <Route exact path={"/"}>
-            <LoginContext.Provider value={route}>
-              <Home />
-            </LoginContext.Provider>
-          </Route>
+          <Route exact path={"/"} component={Home}></Route>
           <Route exact path={"/signup"} component={SignUP} />
           <SecureRoute
             exact

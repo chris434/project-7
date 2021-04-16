@@ -1,16 +1,15 @@
-import { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import axios from "./axios";
 import Cookies from "universal-cookie";
 import Button from "./styled-button";
-import LoginContext from "./context/login-context";
-import login from "./loginFuction";
 
 function Login() {
-  const loginRoute = useContext(LoginContext);
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState();
   const history = useHistory();
+  const { state } = useLocation();
+  console.log(state);
 
   const onchange = (e) => {
     const { value, name } = e.target;
@@ -31,12 +30,14 @@ function Login() {
       .then((res) => {
         const cookie = new Cookies();
         cookie.set("Authorization", `bearer ${res.data.token}`);
-        history.push(loginRoute);
+        const path = state ? state : "/forum";
+        history.push(path);
       })
       .catch((Error) => {
         setError(Error.response.data);
       });
   };
+
   const singUp = () => {
     history.push("/signup");
   };

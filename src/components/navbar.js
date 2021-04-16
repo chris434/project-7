@@ -1,15 +1,18 @@
-import { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useState, useEffect, useRef, useContext } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
 import titleLogo from "../images/icon-left-font-monochrome-black.svg";
 import { FaUser, FaCog, FaPowerOff } from "react-icons/fa";
+import userContext from "./context/userContext";
 
 function Navbar(props) {
   console.log(props);
   const [open, setToggle] = useState("none");
   const dropDownRef = useRef();
   const profileImageRef = useRef();
+  const user = useContext(userContext);
   const history = useHistory();
+  const location = useLocation();
   console.log(props);
 
   const keyDown = (e) => {
@@ -46,7 +49,7 @@ function Navbar(props) {
         <img
           ref={profileImageRef}
           className="profile-image"
-          src={props.profile_image}
+          src={user.profile_image}
           alt=""
           onClick={dropDownState}
         />
@@ -56,7 +59,7 @@ function Navbar(props) {
           <ul ref={dropDownRef} style={{ display: open }}>
             <li onClick={() => history.push("/delete_account")}>
               <FaUser />
-              {`${props.first_name} ${props.last_name}`}
+              {`${user.first_name} ${user.last_name}`}
             </li>
             <hr />
             <li>
