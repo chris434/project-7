@@ -67,8 +67,7 @@ function Login() {
             <Button
               onClick={onSubmit}
               color={"blue"}
-              hover={"rgb(16, 16, 207)"}
-              className="login-button">
+              hover={"rgb(16, 16, 207)"}>
               Login
             </Button>
           </form>

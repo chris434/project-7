@@ -11,9 +11,21 @@ const PostContainer = styled.div`
   img {
     width: 3rem;
     height: auto;
+    margin: 0 1rem 0 1rem;
+  }
+  small {
+    font-size: 1.5rem;
   }
   * {
     margin-right: 0.5rem;
+  }
+  @media (max-width: 600px) {
+    img {
+      width: 2.5rem;
+    }
+    small {
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -35,8 +47,9 @@ function PostHeader(props) {
         src={post.profile_image}
         alt={post.first_name + " " + post.last_name}
       />
-      <small style={{ fontSize: "1.5rem" }}>
-        <b>{post.first_name + " " + post.last_name}</b> {post.created_date}
+      <small>
+        <b>{post.first_name + " " + post.last_name}</b> <br />
+        {post.created_date}
       </small>
     </PostContainer>
   );

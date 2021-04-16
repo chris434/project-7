@@ -13,6 +13,9 @@ const PostsContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 400px) {
+    padding: 0;
+  }
 `;
 const Button = styled.button`
   border-radius: 50px;
@@ -21,7 +24,7 @@ const Button = styled.button`
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
-  margin: 3rem 0 5% 3%;
+  margin: 1rem 0 5% 3%;
   padding: 2%;
   outline: none;
   :hover {

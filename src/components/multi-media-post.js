@@ -6,13 +6,27 @@ import SubmitPost from "./submit-post";
 
 const UploadContainer = styled.div`
   width: 100%;
-  height: 30vh;
   border: gray 3px dashed;
+  position: relative;
+  padding: 10% 0 10% 0;
+`;
+const Upload = styled.div`
+  display: ${(props) => (props.state ? "flex" : "none")};
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  label {
+    font-size: 1rem;
+    padding: 1rem;
+    background-color: blue;
+    color: white;
+  }
 `;
 const Info = styled.div`
   width: 100%;
   height: 30vh;
-  display: flex;
+  display: ${(props) => (!props.state ? "flex" : "none")};
   justify-content: center;
   flex-direction: column;
   text-align: center;
@@ -22,35 +36,25 @@ const Info = styled.div`
 `;
 const Preview = styled.img`
   width: 50%;
-  position: relative;
   z-index: 1;
-  margin: 5%;
+  margin-bottom: 5%;
   object-fit: fill;
   overflow: hidden;
-`;
 
-const ImageContainer = styled.section`
-  width: 70%;
-  align-items: center;
-  label {
-    font-size: 1rem;
-    padding: 1rem;
-    margin-left: 1rem;
-    background-color: blue;
-    color: white;
+  @media (max-width: 400px) {
+    width: 100%;
   }
 `;
 
-function Previews(props) {
+function Previews() {
   const [hasImage, setHasImage] = useState({
     label: "file-upLoader",
-    UploadState: "block",
-    PreviewState: "none",
+    UploadState: false,
   });
-  const [image, setImage] = useState({ urlImage: null, image: null });
+  const [image, setImage] = useState({ value: "" });
 
   const changeImage = (e) => {
-    setHasImage({ label: "", UploadState: "none", PreviewState: "flex" });
+    setHasImage({ label: "", UploadState: true });
 
     let url = image.urlImage;
     let postImage = image.image;
@@ -64,7 +68,7 @@ function Previews(props) {
     form.append("field", "image");
 
     setImage({
-      image: form,
+      value: form,
       urlImage: url,
     });
   };
@@ -73,17 +77,20 @@ function Previews(props) {
     <>
       <label htmlFor={hasImage.label}>
         <UploadContainer>
-          <Info style={{ display: hasImage.UploadState }}>
+          <Info state={hasImage.UploadState}>
             <p>
               <FaUpload fontSize="2rem" />
               <br />
               click upload image
             </p>
           </Info>
-          <ImageContainer style={{ display: hasImage.PreviewState }}>
+          <Upload state={hasImage.UploadState}>
             <Preview src={image.urlImage}></Preview>
-            <label htmlFor="file-upLoader">change Image</label>
-          </ImageContainer>
+
+            <label state={hasImage.UploadState} htmlFor="file-upLoader">
+              change Image
+            </label>
+          </Upload>
         </UploadContainer>
       </label>
       <input
@@ -93,7 +100,8 @@ function Previews(props) {
         id="file-upLoader"
         style={{ display: "none" }}
       />
-      <SubmitPost value={image.image}></SubmitPost>
+
+      <SubmitPost data={image.value} isTrue={true}></SubmitPost>
     </>
   );
 }

@@ -8,13 +8,23 @@ import { useHistory } from "react-router-dom";
 const Container = styled.div`
   width: 60%;
   margin-top: 3rem;
+  margin: 3rem;
+  padding: 2rem;
   background-color: white;
+  box-shadow: 10px 20px gray;
   input {
     width: 50%;
     font-size: 2rem;
   }
   label {
     font-size: 1.2rem;
+  }
+  @media (max-width: 600px) {
+    width: 80%;
+    padding: 2rem;
+    input {
+      width: 80%;
+    }
   }
 `;
 function Delete() {
@@ -27,7 +37,7 @@ function Delete() {
     try {
       const cookie = new Cookies();
       console.log(cookie.get("Authorization"));
-      const response = await axios.delete(`/backend/delete-account`, {
+      await axios.delete(`/backend/delete-account`, {
         data: {
           password: password,
         },
@@ -35,7 +45,6 @@ function Delete() {
           Authorization: cookie.get("Authorization"),
         },
       });
-      console.log(response);
       cookie.remove("Authorization");
       history.push("/");
     } catch (error) {

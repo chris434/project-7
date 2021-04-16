@@ -116,83 +116,82 @@ function SignUp() {
   };
 
   return (
-    <div>
-      <main>
-        <div className="signup-container">
-          <img className="title-image" src={titleImage} alt="" />
-          <h1>create an account with Groupomania </h1>
-          <small className="question">
-            already have an account? <Link to="/">go to login</Link>
-          </small>
-          <form>
-            <div>
-              <small className="required">* </small>
-              <input
-                name="first_name"
-                value={data.firstName}
-                onChange={dataOnChange}
-                type="text"
-                placeholder="first name"
-              />
-              <br /> <small className="error">{errors.first_name}</small>
-            </div>
-            <div>
-              <small className="required">* </small>
-              <input
-                name="last_name"
-                value={data.lastName}
-                onChange={dataOnChange}
-                type="text"
-                placeholder="last name"
-              />
-              <br /> <small className="error">{errors.last_name}</small>
-            </div>
-            <div>
-              <small className="required">* </small>
-              <input
-                name="email"
-                value={data.email}
-                onChange={dataOnChange}
-                type="text"
-                placeholder="email"
-              />
-              <br /> <small className="error">{errors.email}</small>
-            </div>
-            <div>
-              <small className="required">* </small>
-              <input
-                onChange={ValidatePassword}
-                type="password"
-                placeholder="password"
-              />
-            </div>
-            <section className="password-requirement-container">
-              <ul>
-                <li style={{ color: state.case0.color }}>
-                  <b>{state.case0.icon} password must contain one number</b>
-                </li>
-                <li style={{ color: state.case1.color }}>
-                  <b>
-                    {state.case1.icon} password must contain one uppercase
-                    character
-                  </b>
-                </li>
-                <li style={{ color: state.case2.color }}>
-                  <b>
-                    {state.case2.icon} password must contain one special
-                    character
-                  </b>
-                </li>
-                <li style={{ color: state.case3.color }}>
-                  <b>{state.case3.icon} password length be 8 characters long</b>
-                </li>
-              </ul>
-            </section>
-            <hr />
+    <div className="flex-container">
+      <div className="signup-container">
+        <img className="title-image" src={titleImage} alt="" />
+        <h1>create an account with Groupomania </h1>
+        <small className="question">
+          already have an account? <Link to="/">go to login</Link>
+        </small>
+        <form>
+          <div>
+            <small className="required">* </small>
+            <input
+              name="first_name"
+              value={data.firstName}
+              onChange={dataOnChange}
+              type="text"
+              placeholder="first name"
+            />
+            <br /> <small className="error">{errors.first_name}</small>
+          </div>
+          <div>
+            <small className="required">* </small>
+            <input
+              name="last_name"
+              value={data.lastName}
+              onChange={dataOnChange}
+              type="text"
+              placeholder="last name"
+            />
+            <br /> <small className="error">{errors.last_name}</small>
+          </div>
+          <div>
+            <small className="required">* </small>
+            <input
+              name="email"
+              value={data.email}
+              onChange={dataOnChange}
+              type="text"
+              placeholder="email"
+            />
+            <br /> <small className="error">{errors.email}</small>
+          </div>
+          <div>
+            <small className="required">* </small>
+            <input
+              onChange={ValidatePassword}
+              type="password"
+              placeholder="password"
+            />
+          </div>
+          <section className="password-requirement-container">
+            <ul>
+              <li style={{ color: state.case0.color }}>
+                <b>{state.case0.icon} password must contain one number</b>
+              </li>
+              <li style={{ color: state.case1.color }}>
+                <b>
+                  {state.case1.icon} password must contain one uppercase
+                  character
+                </b>
+              </li>
+              <li style={{ color: state.case2.color }}>
+                <b>
+                  {state.case2.icon} password must contain one special character
+                </b>
+              </li>
+              <li style={{ color: state.case3.color }}>
+                <b>{state.case3.icon} password length be 8 characters long</b>
+              </li>
+            </ul>
+          </section>
+          <hr />
+          <div className={"flex-center"}>
             <Button onClick={ValidateData}>create account</Button>
-          </form>
-        </div>
-      </main>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

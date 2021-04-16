@@ -2,7 +2,10 @@ import { useState } from "react";
 import SubmitPost from "./submit-post";
 
 const WrittenPost = () => {
-  const [post, setPost] = useState({ value: "", length: 0 });
+  const [post, setPost] = useState({
+    data: { value: "", field: "text" },
+    length: 0,
+  });
 
   const update = (e) => {
     const { value } = e.target;
@@ -25,7 +28,7 @@ const WrittenPost = () => {
         maxLength="255"
         placeholder="what is on your mind?"
         className="post-textArea"></textarea>
-      <SubmitPost value={post.data}></SubmitPost>
+      <SubmitPost data={post.data}></SubmitPost>
     </>
   );
 };

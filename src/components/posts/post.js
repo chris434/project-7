@@ -14,6 +14,10 @@ const Post = styled.section`
   margin-top: ${(props) => props.marginTop || 0};
   width: ${(props) => props.width || "auto"};
 
+  @media (max-width: 800px) {
+    width: 80%;
+  }
+
   @media (max-width: 600px) {
     width: 100%;
   }
@@ -29,11 +33,15 @@ const Read = styled.div`
 const PostContent = styled.div`
   font-size: 2rem;
   cursor: ${(props) => (!props.cursor ? "pointer" : "auto")};
-
-  height: ${(props) => props.height || "auto"};
-  width: 80%;
-
+  align-items: center;
   margin: 3%;
+  color: black;
+  text-decoration: none;
+  article {
+    font-size: 1.5rem;
+    margin: 2rem 0.5rem 2rem 0.5rem;
+    color: black;
+  }
 `;
 const ImageContainer = styled.div`
   display: flex;
@@ -51,7 +59,7 @@ const ImageContainer = styled.div`
 function PostInfo() {
   const post = useContext(PostContext);
   return (
-    <PostContent cursor={post.page} id={post.post_id}>
+    <PostContent cursor={post.page} height={post.image} id={post.post_id}>
       {post.image ? (
         <ImageContainer>
           <img src={post.image} alt="" />

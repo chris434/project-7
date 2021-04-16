@@ -23,7 +23,7 @@ function PostViewer() {
           ...response.data,
           read: true,
           page: true,
-          style: { marginTop: "5rem", width: "60%", height: "auto" },
+          style: { marginTop: "2rem", width: "60%", height: "auto" },
         });
       } catch (error) {
         console.log(error);
@@ -32,6 +32,7 @@ function PostViewer() {
     getPosts();
   }, []);
   const style = { marginTop: "5rem", width: "60%" };
+
   const data = { ...post, page: true, style };
   console.log("jii");
   console.log(data);

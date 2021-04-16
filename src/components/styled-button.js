@@ -1,13 +1,14 @@
 import styled from "styled-components";
 
 const Button = styled.button`
+  width: 60%;
   font-size: 2rem;
-  margin: 5% 20% 5% 20%;
+  margin: 5% 0% 5% 0%;
   background-color: ${(props) =>
     props.color ? props.color : "rgb(74, 133, 16)"};
+  opacity: ${(props) => (props.state ? 0.8 : 1)};
   color: white;
   padding: 2%;
-  width: 50%;
   cursor: pointer;
   outline: none;
   border: none;
@@ -16,5 +17,9 @@ const Button = styled.button`
     background-color: ${(props) =>
       props.hover ? props.hover : "rgb(105, 182, 27)"};
   }
+  @media (max-width: 400px) {
+    width: 80%;
+  }
 `;
+
 export default Button;

@@ -54,7 +54,7 @@ function MainFooter() {
         <Link
           to={{
             pathname: `post/${post.post_id}`,
-            state: { content: false, scroll: true },
+            state: { content: true, scroll: true },
           }}
           style={{ fontSize: "1.2rem" }}>
           {like.count} likes

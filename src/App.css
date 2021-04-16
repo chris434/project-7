@@ -2,10 +2,8 @@
     text-align: center;
 }
 
-.disabled {
-    cursor: not-allowed;
-    opacity: 1.8;
-    background-color: gray;
+form {
+    margin-top: 10%;
 }
 
 .link {
@@ -38,6 +36,11 @@ main {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
 }
 
 .create-post-container {
@@ -142,6 +145,7 @@ header {
     text-align: center;
     width: 60%;
     box-shadow: 10px 25px gray;
+    padding: 10%;
 }
 
 .login input {
@@ -199,6 +203,23 @@ h1 {
     font-size: 1.5rem;
 }
 
+.spin {
+    animation: spin linear 1500ms infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
 
 /* button {
     font-size: 2rem;
@@ -245,6 +266,7 @@ ul {
     flex-direction: column;
     padding: 5%;
     align-items: center;
+    padding: 5%;
 }
 
 .signup-container input {
@@ -277,12 +299,12 @@ ul {
         display: block;
     }
     .signup-container input {
-        width: 60%;
-        margin-top: 10%;
+        width: 70%;
+        margin-top: 0%;
     }
     .welcome,
     .signup-container {
-        width: 100%;
+        width: 90%;
     }
     h1,
     .question {

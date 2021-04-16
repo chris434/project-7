@@ -55,12 +55,12 @@ exports.createPost = async(req, res) => {
     try {
 
         const postId = await pool.query(`INSERT INTO posts (user_id) values(${userId}) RETURNING post_id`)
-        console.log(postId)
+        console.log(content)
         await pool.query(`INSERT INTO post_content (content,content_type,post_id) VALUES('${content}','${contentType}',${postId.rows[0].post_id})`)
         return res.status(200).json('post successful')
 
     } catch (e) {
-
+        console.log(e)
         res.status(400).json(e)
     }
 }
@@ -72,7 +72,7 @@ exports.getPost = async(req, res) => {
 
         const post = await pool.query(`SELECT post_id,like_count,comment_count, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
         const likes = await pool.query(`SELECT first_name,last_name,profile_image FROM likes JOIN users ON (likes.user_id = users.user_id) WHERE post_id = ${id}`)
-        const comments = await pool.query(`SELECT first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = ${id}`)
+        const comments = await pool.query(`SELECT first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = ${id} ORDER BY comments.created_time DESC`)
         const postContent = await pool.query(`SELECT post_id, content, content_type FROM post_content WHERE post_id =${id}`)
         await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES(${user_id},${id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
 
@@ -80,6 +80,10 @@ exports.getPost = async(req, res) => {
         for (let i = 0; i < postContent.rows.length; i++) {
             const row = postContent.rows[i]
             content = {...content, [row.content_type]: row.content }
+        }
+
+        for (let i = 0; i < comments.rows.length; i++) {
+            comments.rows[i].created_time = dateConverter(comments.rows[i].created_time)
         }
 
         post.rows[0].created_date = dateConverter(post.rows[0].created_date)

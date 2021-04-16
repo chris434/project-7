@@ -7,18 +7,31 @@ import PostComment from "./postComment";
 const LikeSection = styled.section`
   font-size: 2rem;
   padding: 2rem;
-  margin: 5%;
+  margin: 1rem;
   border: ${(props) => (!props.state ? "1px solid black" : "none")};
   #header {
     display: flex;
     align-items: center;
-    * {
-      margin-right: 1rem;
-    }
   }
   img {
     width: 3rem;
+    margin: 0.5rem;
     clip-path: circle();
+  }
+  b {
+    margin: 0;
+  }
+  small {
+    font-size: 1.5rem;
+  }
+  @media (max-width: 400px) {
+    padding: 0.5rem;
+    img {
+      width: 2.5rem;
+    }
+    small {
+      font-size: 1rem;
+    }
   }
 `;
 const CommentBody = styled.p`
@@ -64,10 +77,13 @@ function Likes(props) {
               <LikeSection state={props.state}>
                 <div id="header">
                   {props.state ? <FaThumbsUp color="blue"></FaThumbsUp> : ""}
-
                   <img src={item.profile_image} alt={item.first_name} />
-                  <small>{item.first_name + " " + item.last_name}</small>
-                  {!props.state ? <small>{item.created_time}</small> : ""}
+                  <small>
+                    <b>{item.first_name + " " + item.last_name}</b>
+                    <br />
+                    {!props.state ? item.created_time : ""}
+                  </small>
+                  <br />
                 </div>
 
                 <hr />
