@@ -14,6 +14,7 @@ module.exports = async(req, res, next) => {
         console.log(correctPassword)
         next()
     } catch (e) {
-        res.status(401).json(e)
+        console.log(e)
+        res.status(401).json(e.message)
     }
 }

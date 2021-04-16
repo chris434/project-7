@@ -30,13 +30,14 @@ const Container = styled.div`
 function Delete() {
   const history = useHistory();
   const [password, setPassword] = useState();
+  const [error, setError] = useState();
   const updatePasswordValue = (e) => {
     setPassword(e.target.value);
   };
   const deleteAccount = async () => {
+    const cookie = new Cookies();
     try {
-      const cookie = new Cookies();
-      console.log(cookie.get("Authorization"));
+      if (!password) return setError("enter password");
       await axios.delete(`/backend/delete-account`, {
         data: {
           password: password,
@@ -48,7 +49,7 @@ function Delete() {
       cookie.remove("Authorization");
       history.push("/");
     } catch (error) {
-      console.log(error);
+      setError(error.response.data);
     }
   };
   return (
@@ -57,6 +58,7 @@ function Delete() {
         <h1>delete account</h1>
         <label htmlFor="password">confirm password</label>
         <input onChange={updatePasswordValue} type="password" />
+        <small className={"error"}>{error}</small>
         <Button onClick={deleteAccount} color={"red"} hover={"brickRed"}>
           delete
         </Button>
