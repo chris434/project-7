@@ -72,9 +72,11 @@ function Likes(props) {
       )}
       {data
         ? data.map((item) => {
-            console.log(props.state);
+            console.log(item.comment_id);
             return (
-              <LikeSection state={props.state}>
+              <LikeSection
+                key={props.state ? item.like_id : item.comment_id}
+                state={props.state}>
                 <div id="header">
                   {props.state ? <FaThumbsUp color="blue"></FaThumbsUp> : ""}
                   <img src={item.profile_image} alt={item.first_name} />

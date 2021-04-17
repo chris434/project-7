@@ -1,13 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostContext from "./context/post-context";
 import Cookies from "universal-cookie";
 import axios from "./axios";
 import Post from "./posts/post";
+import NoResult from "./404";
 
 function PostViewer() {
   const [post, setPosts] = useState([]);
+  const [hasPost, setHasPost] = useState(true);
   const endpoint = useParams();
+  const history = useHistory();
   useEffect(() => {
     const getPosts = async () => {
       const cookie = new Cookies();
@@ -27,6 +30,7 @@ function PostViewer() {
         });
       } catch (error) {
         console.log(error);
+        setHasPost(false);
       }
     };
     getPosts();
@@ -37,11 +41,17 @@ function PostViewer() {
   console.log("jii");
   console.log(data);
   return (
-    <PostContext.Provider value={post}>
-      <div className="flex-container">
-        <Post read={true} {...data} />
-      </div>
-    </PostContext.Provider>
+    <>
+      {hasPost ? (
+        <PostContext.Provider value={post}>
+          <div className="flex-container">
+            <Post read={true} {...data} />
+          </div>
+        </PostContext.Provider>
+      ) : (
+        <NoResult type={"post"}></NoResult>
+      )}
+    </>
   );
 }
 export default PostViewer;

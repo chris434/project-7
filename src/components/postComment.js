@@ -52,7 +52,7 @@ function PostComment(props) {
     try {
       const cookie = new Cookies();
       console.log(cookie.get("Authorization"));
-      await axios.post(
+      const response = await axios.post(
         `/backend/comment/${param.id}`,
         { comment: comment.current.value },
         {
@@ -63,7 +63,9 @@ function PostComment(props) {
       );
 
       const data = props.comments;
+      console.log(response);
       data.unshift({
+        comment_id: response.data,
         first_name: user.first_name,
         last_name: user.last_name,
         profile_image: user.profile_image,

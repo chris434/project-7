@@ -32,7 +32,7 @@ const Read = styled.div`
 `;
 const PostContent = styled.div`
   font-size: 2rem;
-  cursor: ${(props) => (!props.cursor ? "pointer" : "auto")};
+  cursor: ${(props) => props.cursor};
   align-items: center;
   margin: 3%;
   color: black;
@@ -59,7 +59,10 @@ const ImageContainer = styled.div`
 function PostInfo() {
   const post = useContext(PostContext);
   return (
-    <PostContent cursor={post.page} height={post.image} id={post.post_id}>
+    <PostContent
+      cursor={!post.page ? "pointer" : "auto"}
+      height={post.image}
+      id={post.post_id}>
       {post.image ? (
         <ImageContainer>
           <img src={post.image} alt="" />
@@ -72,12 +75,9 @@ function PostInfo() {
 }
 
 function Posts(props) {
-  const param = useParams();
   const post = useContext(PostContext);
 
-  console.log(post);
-  console.log(param);
-  console.log(props);
+  console.log(post.page);
 
   return (
     <Post {...post.style}>

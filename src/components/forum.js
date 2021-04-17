@@ -39,7 +39,7 @@ function Forum(props) {
   useEffect(() => {
     const getPosts = async () => {
       const cookie = new Cookies();
-      console.log("kk");
+
       try {
         const response = await axios.get("/backend/posts", {
           headers: {
@@ -56,7 +56,6 @@ function Forum(props) {
   }, []);
 
   console.log(data);
-  // const posts = JSON.parse(props.data);
 
   return (
     <div>
@@ -67,9 +66,10 @@ function Forum(props) {
         {data.map((post) => {
           const style = { marginTop: "0", height: "auto", width: "60%" };
           const data = { ...post, style, page: false };
+          console.log(data.post_id);
           return (
-            <PostContext.Provider value={data}>
-              <Post key={post.post_id}></Post>
+            <PostContext.Provider key={post.post_id} value={data}>
+              <Post></Post>
             </PostContext.Provider>
           );
         })}

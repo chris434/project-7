@@ -71,12 +71,13 @@ exports.getPost = async(req, res) => {
         const user_id = req.id
 
         const post = await pool.query(`SELECT post_id,like_count,comment_count, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
-        const likes = await pool.query(`SELECT first_name,last_name,profile_image FROM likes JOIN users ON (likes.user_id = users.user_id) WHERE post_id = ${id}`)
-        const comments = await pool.query(`SELECT first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = ${id} ORDER BY comments.created_time DESC`)
+        const likes = await pool.query(`SELECT like_id, first_name,last_name,profile_image FROM likes JOIN users ON (likes.user_id = users.user_id) WHERE post_id = ${id}`)
+        const comments = await pool.query(`SELECT comment_id, first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = ${id} ORDER BY comments.created_time DESC`)
         const postContent = await pool.query(`SELECT post_id, content, content_type FROM post_content WHERE post_id =${id}`)
         await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES(${user_id},${id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
-
+        console.log(post)
         let content = {}
+
         for (let i = 0; i < postContent.rows.length; i++) {
             const row = postContent.rows[i]
             content = {...content, [row.content_type]: row.content }
@@ -91,7 +92,7 @@ exports.getPost = async(req, res) => {
         res.status(200).json(data)
 
     } catch (e) {
-        console.log(e)
+        res.status(401).json('unable to find post')
     }
 }
 exports.postLikes = async(req, res) => {
@@ -116,13 +117,12 @@ exports.postLikes = async(req, res) => {
 exports.postComment = async(req, res) => {
     const userId = req.id
     const comment = req.body.comment
-    console.log(comment)
     const postId = req.params.id
     try {
-        await pool.query(`INSERT INTO comments (comment_content,user_id,post_id) VALUES('${comment}',${userId},${postId})`)
+        const commentId = await pool.query(`INSERT INTO comments (comment_content,user_id,post_id) VALUES('${comment}',${userId},${postId}) RETURNING comment_id`)
         await pool.query(`UPDATE posts SET comment_count = (SELECT COUNT(comment_id + 1) FROM comments WHERE post_id =${postId}) WHERE post_id = ${postId}`)
 
-        return res.status(200).json('comment posted')
+        return res.status(200).json(commentId.rows[0].comment_id)
 
     } catch (error) {
         console.log(error)

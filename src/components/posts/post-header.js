@@ -37,7 +37,7 @@ function PostHeader(props) {
     <PostContainer>
       {post.page ? (
         <FaArrowLeft
-          onClick={() => history.push("/forum")}
+          onClick={() => history.push("/")}
           fontSize="2rem"
           color="gray"></FaArrowLeft>
       ) : null}
