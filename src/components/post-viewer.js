@@ -7,10 +7,11 @@ import Post from "./posts/post";
 import NoResult from "./404";
 
 function PostViewer() {
+  document.title = "post";
   const [post, setPosts] = useState([]);
   const [hasPost, setHasPost] = useState(true);
   const endpoint = useParams();
-  const history = useHistory();
+
   useEffect(() => {
     const getPosts = async () => {
       const cookie = new Cookies();

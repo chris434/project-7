@@ -7,6 +7,7 @@ import Cookies from "universal-cookie";
 import Button from "./styled-button";
 
 function SignUp() {
+  document.title = "sign up";
   const [state, setState] = useState({
     case0: { color: "red", icon: <FaTimes /> },
     case1: { color: "red", icon: <FaTimes /> },

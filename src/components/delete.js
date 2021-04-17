@@ -34,6 +34,7 @@ function Delete() {
   const updatePasswordValue = (e) => {
     setPassword(e.target.value);
   };
+  document.title = "delete account";
   const deleteAccount = async () => {
     const cookie = new Cookies();
     try {

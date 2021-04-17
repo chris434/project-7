@@ -15,6 +15,7 @@ const CreatePostContainer = styled.div`
 `;
 
 function CreatePost(props) {
+  document.title = "create post";
   const [postOption, setPostOption] = useState(true);
 
   const data = {

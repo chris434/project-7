@@ -30,6 +30,7 @@ const InfoContainer = styled.div`
 `;
 
 function home() {
+  document.title = "login";
   return (
     <main>
       <Container>

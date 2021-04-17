@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
 import titleLogo from "../images/icon-left-font-monochrome-black.svg";
-import { FaUser, FaCog, FaPowerOff } from "react-icons/fa";
+import { FaUser, FaWpforms, FaPowerOff } from "react-icons/fa";
 import userContext from "./context/userContext";
 
 function Navbar(props) {
-  console.log(props);
+  const { pathname } = useLocation();
   const [open, setToggle] = useState("none");
   const dropDownRef = useRef();
   const profileImageRef = useRef();
@@ -21,6 +21,12 @@ function Navbar(props) {
     ) {
       setToggle("none");
     }
+  };
+  const currentPage = (path) => {
+    if (pathname === path) {
+      return "none";
+    }
+    return "all";
   };
   useEffect(() => {
     window.addEventListener("mousedown", keyDown);
@@ -43,7 +49,11 @@ function Navbar(props) {
   return (
     <div className="nav-bar-container">
       <header>
-        <img className="logo" src={titleLogo} alt="" />
+        <Link
+          style={{ width: "100%", pointerEvents: currentPage("/") }}
+          to={"/"}>
+          <img className="logo" src={titleLogo} alt="" />
+        </Link>
 
         <img
           ref={profileImageRef}
@@ -56,19 +66,39 @@ function Navbar(props) {
       <div>
         <section className="profile-dropdown">
           <ul ref={dropDownRef} style={{ display: open }}>
-            <li onClick={() => history.push("/delete_account")}>
-              <FaUser />
-              {`${user.first_name} ${user.last_name}`}
+            <li>
+              <Link
+                to={"/delete_account"}
+                style={{
+                  color: "black",
+                  pointerEvents: currentPage("/delete_account"),
+                }}>
+                <FaUser />
+                {`${user.first_name} ${user.last_name}`}
+              </Link>
             </li>
             <hr />
             <li>
-              <FaCog />
-              your account
+              <Link
+                to={"/"}
+                style={{
+                  color: "black",
+                  pointerEvents: currentPage("/"),
+                }}>
+                <FaWpforms />
+                forum
+              </Link>
             </li>
             <hr />
             <li onClick={logout}>
-              <FaPowerOff />
-              log out
+              <Link
+                to={"/login"}
+                style={{
+                  color: "black",
+                }}>
+                <FaPowerOff />
+                log out
+              </Link>
             </li>
           </ul>
         </section>

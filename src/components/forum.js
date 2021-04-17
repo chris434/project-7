@@ -36,6 +36,7 @@ const Button = styled.button`
 function Forum(props) {
   const history = useHistory();
   const [data, setData] = useState([]);
+  document.title = "forum";
   useEffect(() => {
     const getPosts = async () => {
       const cookie = new Cookies();
