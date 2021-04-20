@@ -12,7 +12,6 @@ const CommentHeader = styled.div`
   }
 `;
 function Comments(props) {
-  console.log(props);
   return (
     <CommentContainer>
       <h2 style={{ textAlign: "center" }}>

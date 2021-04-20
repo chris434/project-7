@@ -37,7 +37,7 @@ const LikeSection = styled.section`
 const CommentBody = styled.p`
   font-size: 1.5rem;
 `;
-function Likes(props) {
+function LikesAdComments(props) {
   const contentContainer = useRef();
   const { state } = useLocation();
   const [data, setData] = useState(props.content);
@@ -72,7 +72,6 @@ function Likes(props) {
       )}
       {data
         ? data.map((item) => {
-            console.log(item.comment_id);
             return (
               <LikeSection
                 key={props.state ? item.like_id : item.comment_id}
@@ -101,4 +100,4 @@ function Likes(props) {
     </div>
   );
 }
-export default Likes;
+export default LikesAdComments;

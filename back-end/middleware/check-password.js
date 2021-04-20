@@ -11,7 +11,6 @@ module.exports = async(req, res, next) => {
         if (!correctPassword) {
             throw new Error('invalid password')
         }
-        console.log(correctPassword)
         next()
     } catch (e) {
         console.log(e)

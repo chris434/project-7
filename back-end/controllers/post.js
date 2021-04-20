@@ -38,11 +38,9 @@ exports.getPosts = async(req, res) => {
 
             console.log(dateConverter(row.created_date))
             row.created_date = dateConverter(row.created_date)
-            console.log(content)
             return {...row, read, liked, ...content }
 
         })
-        console.log('jj')
         return res.status(200).json(mappedPosts)
     } catch (e) {
         console.log(e)
@@ -55,10 +53,8 @@ exports.createPost = async(req, res) => {
     try {
 
         const postId = await pool.query(`INSERT INTO posts (user_id) values(${userId}) RETURNING post_id`)
-        console.log(content)
         await pool.query(`INSERT INTO post_content (content,content_type,post_id) VALUES('${content}','${contentType}',${postId.rows[0].post_id})`)
         return res.status(200).json('post successful')
-
     } catch (e) {
         console.log(e)
         res.status(400).json(e)
@@ -75,7 +71,7 @@ exports.getPost = async(req, res) => {
         const comments = await pool.query(`SELECT comment_id, first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = ${id} ORDER BY comments.created_time DESC`)
         const postContent = await pool.query(`SELECT post_id, content, content_type FROM post_content WHERE post_id =${id}`)
         await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES(${user_id},${id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
-        console.log(post)
+
         let content = {}
 
         for (let i = 0; i < postContent.rows.length; i++) {
@@ -97,7 +93,6 @@ exports.getPost = async(req, res) => {
 }
 exports.postLikes = async(req, res) => {
     try {
-        console.log(req.params)
         const query = await pool.query(`INSERT INTO likes (post_id , user_id) values(${req.params.id},${req.id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
 
         await pool.query(`UPDATE posts SET like_count = (SELECT COUNT(like_id + 1) FROM likes WHERE post_id =${req.params.id}) WHERE post_id = ${req.params.id}`)
@@ -131,7 +126,6 @@ exports.postComment = async(req, res) => {
 }
 exports.deleteAccount = async(req, res) => {
     const user_id = req.id
-    console.log(req.id)
     try {
         const posts = await pool.query(`SELECT post_id FROM posts WHERE user_id =${user_id}`)
         console.log(posts.rows)
@@ -148,6 +142,9 @@ exports.deleteAccount = async(req, res) => {
         await pool.query(`DELETE FROM user_read WHERE user_id =${user_id}`)
         await pool.query(`DELETE FROM posts WHERE user_id =${user_id}`)
         await pool.query(`DELETE FROM users WHERE user_id =${user_id}`)
+
+        await pool.query(`UPDATE posts SET like_count = (SELECT COUNT(like_id) FROM likes WHERE likes.post_id = posts.post_id)`)
+        await pool.query(`UPDATE posts SET comment_count = (SELECT COUNT(comment_id) FROM comments WHERE comments.post_id = posts.post_id)`)
         return res.status(200).json('account deleted')
     } catch (error) {
         console.log(error)

@@ -97,6 +97,7 @@ function Previews() {
         onChange={changeImage}
         type="file"
         name=""
+        accept="image/*"
         id="file-upLoader"
         style={{ display: "none" }}
       />

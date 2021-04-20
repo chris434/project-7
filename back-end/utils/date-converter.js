@@ -1,8 +1,7 @@
 const dateConverter = (timeStamp) => {
     let timeString = ''
-    const timeParts = ['year', 'month', 'day', 'hour', 'minuet', 'seconde']
+    const timeParts = ['year', 'month', 'day', 'hour', 'minute', 'second']
     const currentDate = new Date().toISOString().split(/-|T|:/)
-    console.log(new Date().toISOString())
     timeStamp.toISOString().split(/-|T|:/).forEach((part, i) => {
         const convertedPart1 = parseInt(part)
         const convertedPart2 = parseInt(currentDate[i])

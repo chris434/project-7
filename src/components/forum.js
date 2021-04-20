@@ -47,7 +47,7 @@ function Forum(props) {
             Authorization: cookie.get("Authorization"),
           },
         });
-        console.log(response);
+
         setData(response.data);
       } catch (error) {
         console.log(error);
@@ -55,8 +55,6 @@ function Forum(props) {
     };
     getPosts();
   }, []);
-
-  console.log(data);
 
   return (
     <div>

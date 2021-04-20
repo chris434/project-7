@@ -12,7 +12,6 @@ function Navbar(props) {
   const profileImageRef = useRef();
   const user = useContext(userContext);
   const history = useHistory();
-  console.log(props);
 
   const keyDown = (e) => {
     if (

@@ -22,8 +22,6 @@ import Delete from "./components/delete";
 import NoResult from "./components/404";
 
 function App() {
-  let endpoint = false;
-
   function SecureRoute(props) {
     const { pathname } = useLocation();
     const [info, setData] = useState([]);
@@ -32,11 +30,10 @@ function App() {
 
     useEffect(() => {
       let sauce = Axios.CancelToken.source();
-      console.log(true);
+
       const getUser = async () => {
         try {
           const cookie = new Cookies();
-          console.log(cookie.get("Authorization"));
           const response = await axios.get(`/backend/authenticate`, {
             cancelToken: sauce.token,
             headers: {
@@ -47,9 +44,7 @@ function App() {
           setData(response.data);
           setLogin(true);
         } catch (e) {
-          console.log("lim");
           setLogin(false);
-          console.log(e);
         }
       };
       getUser();
@@ -59,23 +54,15 @@ function App() {
       <Route
         path={props.path}
         render={(data) => {
-          endpoint = props.endpoint || false;
-          console.log(endpoint);
-          if (props.computedMatch.params.id) {
-            endpoint = `${props.endpoint}/${props.computedMatch.params.id}`;
-          }
-
           if (isLoggedIN) {
             return (
               <>
                 {loading ? (
                   <UserContext.Provider value={info}>
-                    <div>
-                      <NavBar></NavBar>
-                      <main>
-                        <props.component></props.component>
-                      </main>
-                    </div>
+                    <NavBar></NavBar>
+                    <main>
+                      <props.component></props.component>
+                    </main>
                   </UserContext.Provider>
                 ) : (
                   <div className="loader"></div>

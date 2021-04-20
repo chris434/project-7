@@ -2,8 +2,8 @@ import titleLogo from "../images/icon-left-font-monochrome-black.svg";
 
 import { useLocation, Link } from "react-router-dom";
 function NoResult(props) {
+  document.title = "404";
   const { pathname } = useLocation();
-  console.log(props);
   return (
     <main className={"flex-container can-not-be-found-container"}>
       {!props.type ? (

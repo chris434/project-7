@@ -1,4 +1,4 @@
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostContext from "./context/post-context";
 import Cookies from "universal-cookie";
@@ -15,7 +15,7 @@ function PostViewer() {
   useEffect(() => {
     const getPosts = async () => {
       const cookie = new Cookies();
-      console.log(endpoint);
+
       try {
         const response = await axios.get(`/backend/post/${endpoint.id}`, {
           headers: {
@@ -30,12 +30,11 @@ function PostViewer() {
           style: { marginTop: "2rem", width: "60%", height: "auto" },
         });
       } catch (error) {
-        console.log(error);
         setHasPost(false);
       }
     };
     getPosts();
-  }, []);
+  }, [endpoint]);
   const style = { marginTop: "5rem", width: "60%" };
 
   const data = { ...post, page: true, style };

@@ -9,7 +9,6 @@ function Login() {
   const [error, setError] = useState();
   const history = useHistory();
   const { state } = useLocation();
-  console.log(state);
 
   const onchange = (e) => {
     const { value, name } = e.target;
@@ -20,7 +19,7 @@ function Login() {
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("sub");
+
     const { email, password } = form;
     if (email === "" || password === "") {
       return setError("email and password required");

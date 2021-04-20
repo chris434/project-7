@@ -12,7 +12,6 @@ const SubmitPost = (props) => {
   const submit = async () => {
     try {
       const cookie = new Cookies();
-      console.log(props);
       if (props.data.value || props.isTrue) {
         setLoading({ style: "block", state: true });
 

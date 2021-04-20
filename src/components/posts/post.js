@@ -1,6 +1,6 @@
 import { FaBookmark } from "react-icons/fa";
 import { useContext } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PostHeader from "../posts/post-header";
 import MainFooter from "../posts/all-post-footer";

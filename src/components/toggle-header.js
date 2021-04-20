@@ -38,15 +38,12 @@ const Options = styled.section`
 function ToggleHeader(props) {
   const [postOption, setPostOption] = useState(props.stateValue);
   const toggle = (e) => {
-    console.log(postOption);
     if (e.target.id === "post") {
       setPostOption(true);
       return props.state(true);
     }
     setPostOption(false);
     props.state(false);
-    console.log(props.state);
-    console.log(props);
   };
   return (
     <div>
