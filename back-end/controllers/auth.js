@@ -11,8 +11,7 @@ exports.signUp = async(req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        const createUser = `INSERT INTO users (first_name,last_name,email,user_password,profile_image) values('${first_name}','${last_name}','${email}','${hashedPassword}','${profileImage}')`
-        await pool.query(createUser)
+        await pool.query("INSERT INTO users (first_name,last_name,email,user_password,profile_image) values($1,$2,$3,$4,$5)", [first_name, last_name, email, hashedPassword, profileImage])
         return res.status(200).json('user created')
     } catch (e) {
         if (e.constraint === 'users_email_key') {
@@ -23,9 +22,8 @@ exports.signUp = async(req, res) => {
 }
 exports.login = async(req, res) => {
     const { email, password } = req.body
-    const lookUpUser = `SELECT * FROM users WHERE email='${email}'`
     try {
-        const user = await pool.query(lookUpUser)
+        const user = await pool.query("SELECT * FROM users WHERE email=$1", [email])
 
         if (!user.rowCount) {
             throw new Error('this email is not registered')
@@ -47,7 +45,7 @@ exports.login = async(req, res) => {
 }
 exports.authenticate = async(req, res) => {
     try {
-        const user = await pool.query(`SELECT profile_image, first_name, last_name FROM users WHERE user_id = ${req.id}`)
+        const user = await pool.query(`SELECT profile_image, first_name, last_name FROM users WHERE user_id = $1`, [req.id])
 
         const data = user.rows[0]
         return res.status(200).json(data)

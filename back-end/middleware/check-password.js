@@ -5,7 +5,7 @@ module.exports = async(req, res, next) => {
     const user_id = req.id
     try {
 
-        const storedPassword = await pool.query(`SELECT user_password FROM users WHERE user_id =${user_id}`)
+        const storedPassword = await pool.query(`SELECT user_password FROM users WHERE user_id =$1`, [user_id])
 
         const correctPassword = await bcrypt.compare(hashedPassword, storedPassword.rows[0].user_password)
         if (!correctPassword) {

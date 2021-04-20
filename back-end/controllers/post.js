@@ -7,8 +7,8 @@ exports.getPosts = async(req, res) => {
     try {
         let posts = await pool.query("SELECT post_id, like_count,comment_count, posts.created_date, first_name, last_name,profile_image FROM posts JOIN users ON (posts.user_id = users.user_id) ORDER BY posts.created_date DESC")
         const postContent = await pool.query('SELECT post_id, content, content_type FROM post_content')
-        const hasRead = await pool.query(`SELECT post_id FROM user_read WHERE user_id =${req.id}`)
-        const hasLiked = await pool.query(`SELECT post_id FROM likes WHERE user_id =${req.id}`)
+        const hasRead = await pool.query(`SELECT post_id FROM user_read WHERE user_id =$1`, [req.id])
+        const hasLiked = await pool.query(`SELECT post_id FROM likes WHERE user_id =$1`, [req.id])
 
         const mappedPosts = posts.rows.map(row => {
             let read = false
@@ -50,10 +50,11 @@ exports.createPost = async(req, res) => {
     const content = req.file || req.body.value
     const contentType = req.body.field
     const userId = req.id
+
     try {
 
-        const postId = await pool.query(`INSERT INTO posts (user_id) values(${userId}) RETURNING post_id`)
-        await pool.query(`INSERT INTO post_content (content,content_type,post_id) VALUES('${content}','${contentType}',${postId.rows[0].post_id})`)
+        const postId = await pool.query(`INSERT INTO posts (user_id) values($1) RETURNING post_id`, [userId])
+        await pool.query(`INSERT INTO post_content (content,content_type,post_id) VALUES($1,$2,$3)`, [content, contentType, postId.rows[0].post_id])
         return res.status(200).json('post successful')
     } catch (e) {
         console.log(e)
@@ -63,14 +64,14 @@ exports.createPost = async(req, res) => {
 
 exports.getPost = async(req, res) => {
     try {
-        const id = req.params.id
+        const post_id = req.params.id
         const user_id = req.id
 
-        const post = await pool.query(`SELECT post_id,like_count,comment_count, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = ${id}`)
-        const likes = await pool.query(`SELECT like_id, first_name,last_name,profile_image FROM likes JOIN users ON (likes.user_id = users.user_id) WHERE post_id = ${id}`)
-        const comments = await pool.query(`SELECT comment_id, first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = ${id} ORDER BY comments.created_time DESC`)
-        const postContent = await pool.query(`SELECT post_id, content, content_type FROM post_content WHERE post_id =${id}`)
-        await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES(${user_id},${id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
+        const post = await pool.query(`SELECT post_id,like_count,comment_count, posts.created_date, first_name, last_name,profile_image  FROM posts JOIN users ON (posts.user_id = users.user_id) WHERE post_id = $1`, [post_id])
+        const likes = await pool.query(`SELECT like_id, first_name,last_name,profile_image FROM likes JOIN users ON (likes.user_id = users.user_id) WHERE post_id = $1`, [post_id])
+        const comments = await pool.query(`SELECT comment_id, first_name,last_name,profile_image,comment_content,comments.created_time FROM comments JOIN users ON (comments.user_id = users.user_id) WHERE post_id = $1 ORDER BY comments.created_time DESC`, [post_id])
+        const postContent = await pool.query(`SELECT post_id, content, content_type FROM post_content WHERE post_id =$1`, [post_id])
+        await pool.query(`INSERT INTO user_read (user_id,post_id) VALUES($1,$2) ON CONFLICT (post_id,user_id) DO NOTHING`, [user_id, post_id])
 
         let content = {}
 
@@ -93,13 +94,15 @@ exports.getPost = async(req, res) => {
 }
 exports.postLikes = async(req, res) => {
     try {
-        const query = await pool.query(`INSERT INTO likes (post_id , user_id) values(${req.params.id},${req.id}) ON CONFLICT (post_id,user_id) DO NOTHING`)
 
-        await pool.query(`UPDATE posts SET like_count = (SELECT COUNT(like_id + 1) FROM likes WHERE post_id =${req.params.id}) WHERE post_id = ${req.params.id}`)
+        const params = [req.params.id, req.id]
+        const query = await pool.query('INSERT INTO likes (post_id,user_id) values($1,$2) ON CONFLICT (post_id,user_id) DO NOTHING', params)
+
+        await pool.query(`UPDATE posts SET like_count = (SELECT COUNT(like_id + 1) FROM likes WHERE post_id = $1) WHERE post_id = $1`, [req.params.id])
 
         if (query.rowCount === 0) {
-            await pool.query(`DELETE FROM likes WHERE post_id = ${req.params.id} AND user_id = ${req.id}`)
-            await pool.query(`UPDATE posts SET like_count = (SELECT COUNT(like_id + -1) FROM likes WHERE post_id =${req.params.id}) WHERE post_id = ${req.params.id}`)
+            await pool.query(`DELETE FROM likes WHERE post_id = $1 AND user_id = $2`, params)
+            await pool.query(`UPDATE posts SET like_count = (SELECT COUNT(like_id + -1) FROM likes WHERE post_id =$1) WHERE post_id = $1`, [req.params.id])
             return res.status(202).json({ message: 'like removed', count: -1 })
         }
 
@@ -114,8 +117,8 @@ exports.postComment = async(req, res) => {
     const comment = req.body.comment
     const postId = req.params.id
     try {
-        const commentId = await pool.query(`INSERT INTO comments (comment_content,user_id,post_id) VALUES('${comment}',${userId},${postId}) RETURNING comment_id`)
-        await pool.query(`UPDATE posts SET comment_count = (SELECT COUNT(comment_id + 1) FROM comments WHERE post_id =${postId}) WHERE post_id = ${postId}`)
+        const commentId = await pool.query(`INSERT INTO comments (comment_content,user_id,post_id) VALUES($1,$2,$3) RETURNING comment_id`, [comment, userId, postId])
+        await pool.query(`UPDATE posts SET comment_count = (SELECT COUNT(comment_id + 1) FROM comments WHERE post_id =$1) WHERE post_id = $1`, [postId])
 
         return res.status(200).json(commentId.rows[0].comment_id)
 
@@ -127,21 +130,22 @@ exports.postComment = async(req, res) => {
 exports.deleteAccount = async(req, res) => {
     const user_id = req.id
     try {
-        const posts = await pool.query(`SELECT post_id FROM posts WHERE user_id =${user_id}`)
+        const posts = await pool.query(`SELECT post_id FROM posts WHERE user_id =$1`, [user_id])
         console.log(posts.rows)
             //deleting other users like/comments relating to this users posts
         for (let i = 0; i < posts.rows.length; i++) {
-            await pool.query(`DELETE FROM likes WHERE post_id =${posts.rows[i].post_id}`)
-            await pool.query(`DELETE FROM comments WHERE post_id =${posts.rows[i].post_id}`)
-            await pool.query(`DELETE FROM user_read WHERE post_id =${posts.rows[i].post_id}`)
-            await pool.query(`DELETE FROM post_content WHERE post_id =${posts.rows[i].post_id}`)
+            const post_id = posts.rows[i].post_id
+            await pool.query(`DELETE FROM likes WHERE post_id =$1`, [post_id])
+            await pool.query(`DELETE FROM comments WHERE post_id =$1`, [post_id])
+            await pool.query(`DELETE FROM user_read WHERE post_id =$1`, [post_id])
+            await pool.query(`DELETE FROM post_content WHERE post_id =$1`, [post_id])
         }
         //deleting post content the current user has liked/commented
-        await pool.query(`DELETE FROM likes WHERE user_id =${user_id}`)
-        await pool.query(`DELETE FROM comments WHERE user_id =${user_id}`)
-        await pool.query(`DELETE FROM user_read WHERE user_id =${user_id}`)
-        await pool.query(`DELETE FROM posts WHERE user_id =${user_id}`)
-        await pool.query(`DELETE FROM users WHERE user_id =${user_id}`)
+        await pool.query(`DELETE FROM likes WHERE user_id =$1`, [user_id])
+        await pool.query(`DELETE FROM comments WHERE user_id =$1`, [user_id])
+        await pool.query(`DELETE FROM user_read WHERE user_id =$1`, [user_id])
+        await pool.query(`DELETE FROM posts WHERE user_id =$1`, [user_id])
+        await pool.query(`DELETE FROM users WHERE user_id =$1`, [user_id])
 
         await pool.query(`UPDATE posts SET like_count = (SELECT COUNT(like_id) FROM likes WHERE likes.post_id = posts.post_id)`)
         await pool.query(`UPDATE posts SET comment_count = (SELECT COUNT(comment_id) FROM comments WHERE comments.post_id = posts.post_id)`)
